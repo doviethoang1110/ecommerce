@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: {
+        args: true,
+        msg: 'Tên đã được sử dụng!'
+      },
       validate: {
         notEmpty:{
           args: true,
@@ -45,7 +49,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     timestamps:true,
-    updatedAt:'updateTimestamp',
     modelName: 'Brand',
   });
   return Brand;

@@ -1,5 +1,5 @@
 const { BrandService } = require('../../container');
-
+const { validateRequest } = require('../../middlewares')
 module.exports.index = async (req, res) => {
     let list = await BrandService.getAllBrands();
     res.api(200,list);
@@ -8,6 +8,7 @@ module.exports.index = async (req, res) => {
 
 module.exports.store = async function(req, res, next) {
     try{
+        validateRequest(req);
         let data = {name:req.body.name,image:req.file.filename,status:req.body.status};
         let brand = await BrandService.store(data);
         res.api(brand.status,brand.body);
@@ -19,6 +20,7 @@ module.exports.store = async function(req, res, next) {
 
 module.exports.update = async function (req, res, next) {
     try {
+        validateRequest(req);
         let param = req.params.id;
         if (!param) res.api(400, 'Không tồn tại Id');
         let data;

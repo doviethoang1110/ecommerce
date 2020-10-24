@@ -3,7 +3,7 @@ const router = require('express').Router(),
 
 const { upload } = require('../../middlewares');
 router.get('/', BrandController.index)
-    .post('/',upload.single('image'), BrandController.store)
+    .post('/' ,upload.single('image'), BrandController.store)
     .post('/:id',upload.single('image'), BrandController.update);
 
 module.exports = router;

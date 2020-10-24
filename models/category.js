@@ -1,5 +1,4 @@
 'use strict';
-const { generateSlug, fixName } = require('../helpers')
 const {
   Model
 } = require('sequelize');
@@ -55,17 +54,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     timestamps: true,
-    modelName: 'Category',
-    hooks: {
-      beforeCreate(attributes, options) {
-        attributes.name = fixName(attributes.getDataValue('name'));
-        attributes.slug = generateSlug(attributes.getDataValue('name'));
-      },
-      beforeUpdate(instance, options) {
-        instance.name = fixName(instance.getDataValue('name'));
-        instance.slug = generateSlug(instance.getDataValue('name'));
-      }
-    }
+    modelName: 'Category'
   });
   return Category;
 };

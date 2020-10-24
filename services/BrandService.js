@@ -9,36 +9,24 @@ class BrandService {
         return brands;
     }
     async store(brand) {
-        let response;
         try {
             let doc = await this.brandRepository.create(brand);
-            let {name,status,image,_id} = doc;
-            response = { status: 201, body: {name,status,image,_id} };
-            return response;
+            let {name,status,image,id} = doc;
+            return { status: 201, body: {name,status,image,id} };
         } catch (err) {
-            response = err.errors ? { status: 400, body: { [err.errors.name.path]: err.errors.name.message } } :
-                response = { status: 400, body: { ...err } };
-            throw response;
+            console.log(err)
+            throw { status: 400, body: err };
         }
     }
-    async update(id,brand) {
-        let response;
+    async update(param,category) {
         try {
-            let doc = await this.brandRepository.update(id, brand);
-            let {name,status,image,_id} = doc;
-            response = { status: 200, body: {name,status,image,_id} };
-            return response;
+            let doc = await this.brandRepository.update(param,category);
+            let {name,status,image,id} = doc[1][0].dataValues;
+            return { status: 200, body: {name,status,image,id} };
         } catch (err) {
-            response = err.errors ? { status: 400, body: { [err.errors.name.path]: err.errors.name.message } } :
-                response = { status: 400, body: { ...err } };
-            throw response;
+            console.log(err)
+            throw { status: 400, body: err };
         }
     }
-
-    // async show(id) {
-    //     let category = await this.categoryRepository.find({ query: { _id: id }, field: 'name parentId status', multiple: false });
-    //     console.log(category)
-    //     return category;
-    // }
 }
 module.exports = BrandService;

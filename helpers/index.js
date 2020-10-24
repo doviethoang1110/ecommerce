@@ -3,7 +3,7 @@ module.exports.menus = async () => {
     let list = await CategoryService.printMenusWeb();
     return list;
 }
-module.exports.generateSlug = (name) => {
+generateSlug = (name) => {
     let slug;
     slug = name.toLowerCase();
     slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
@@ -23,8 +23,15 @@ module.exports.generateSlug = (name) => {
     slug = slug.replace(/\@\-|\-\@|\@/gi, '');
     return slug;
 }
-module.exports.fixName = (name) => {
+fixName = (name) => {
     let res = name.toLowerCase();
     res = name.charAt(0).toUpperCase()+name.slice(1,name.length);
     return res;
+}
+
+module.exports.hookModel = (attributes) => {
+    if(attributes.name) {
+        attributes.name = fixName(attributes.getDataValue('name'));
+        attributes.slug = generateSlug(attributes.getDataValue('name'));
+    }
 }
