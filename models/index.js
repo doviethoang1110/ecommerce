@@ -22,12 +22,12 @@ db.products = require("../models/product")(sequelize, DataTypes);
 db.categories.belongsToMany(db.products,{
   through: "Category_Product",
   as: "products",
-  foreignKey: "category_id"
+  foreignKey: "categoryId"
 });
 db.products.belongsToMany(db.categories,{
   through: "Category_Product",
   as: "categories",
-  foreignKey: "product_id"
+  foreignKey: "productId"
 })
 
 module.exports = db;

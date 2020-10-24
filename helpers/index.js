@@ -23,3 +23,8 @@ module.exports.generateSlug = (name) => {
     slug = slug.replace(/\@\-|\-\@|\@/gi, '');
     return slug;
 }
+module.exports.fixName = (name) => {
+    let res = name.toLowerCase();
+    res = name.charAt(0).toUpperCase()+name.slice(1,name.length);
+    return res;
+}

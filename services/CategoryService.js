@@ -18,36 +18,27 @@ class CategoryService {
     }
 
     async getAllCategories() {
-        let categories = await this.categoryRepository.find({attributes:['id','name','parentId','status']});
+        let categories = await this.categoryRepository.find({attributes: ['id','name','parentId','status']})
         return categories;
     }
     async store(category) {
-        let response;
-        let doc;
         try {
-            doc = await this.categoryRepository.create(category);
-            console.log(doc);
-            // let {name,status,parentId,_id:id} = doc;
-            // response = { status: 201, body: {name,status,parentId,id} };
-            return {};
+            let doc = await this.categoryRepository.create(category);
+            let {name,status,parentId,id} = doc;
+            return { status: 201, body: {name,status,parentId,id} };
         } catch (err) {
-            response = err.errors ? { status: 400, body: { [err.errors.name.path]: err.errors.name.message } } :
-                response = { status: 400, body: { ...err } };
-            throw response;
+            console.log(err)
+            throw { status: 400, body: err };
         }
     }
-    async update(id,category) {
-        let response;
-        let doc;
+    async update(param,category) {
         try {
-            doc = await this.categoryRepository.update(id, category);
-            let {name,status,parentId,_id} = doc;
-            response = { status: 200, body: {name,status,parentId,_id} };
-            return response;
+            let doc = await this.categoryRepository.update(param,category);
+            let {name,status,parentId,id} = doc[1][0].dataValues;
+            return { status: 200, body: {name,status,parentId,id} };
         } catch (err) {
-            response = err.errors ? { status: 400, body: { [err.errors.name.path]: err.errors.name.message } } :
-                response = { status: 400, body: { ...err } };
-            throw response;
+            console.log(err)
+            throw { status: 400, body: err };
         }
     }
 

@@ -14,25 +14,16 @@ const storage = multer.diskStorage({
     },
 });
 const upload = multer({storage:storage,fileFilter:imageValidate,limits:1000000});
+module.exports.upload = upload;
+
 
 module.exports.validate = (model) => {
-    let errors = model.validateSync();
-    if (errors) {
-        let keys = Object.keys(errors.errors);
-        let values = Object.values(errors.errors).toString().split(',');
-        let error = keys.reduce((a, b, index) => ({ ...a, [b]: values[index] }), {});
-        throw error;
-    }
+    let errors;
+    if(model || model.length) errors = model.reduce((m,n) => ({...m,[n.path]:n.message}),{});
+    if(errors) throw errors;
 }
+
 module.exports.validateRequest = (model) => {
     let results = validationResult(model);
-    if(results.errors.length > 0) {
-        let body = {};
-        for (let e of results.errors) {
-            body[e.param] = e.msg;
-        }
-        let errors = { status: 400, body: { ...body } }
-        throw errors;
-    }
+    if(results.errors.length) throw { status: 400, body: { ...results.errors.reduce((m,n) => ({...m,[n.param]:n.msg}),{}) } };
 }
-module.exports.upload = upload;

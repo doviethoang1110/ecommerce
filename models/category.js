@@ -1,5 +1,5 @@
 'use strict';
-const { generateSlug } = require('../helpers')
+const { generateSlug, fixName } = require('../helpers')
 const {
   Model
 } = require('sequelize');
@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      console.log('static')
+      console.log(models)
       // define association here
     }
   };
@@ -34,13 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     slug: {
-      type:DataTypes.STRING,
-      validate:{
-        notEmpty:{
-          args:true,
-          msg:'Đường dẫn không được trống'
-        }
-      }
+      type:DataTypes.STRING
     },
     parentId: {
       type:DataTypes.INTEGER,
@@ -61,15 +57,13 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
     modelName: 'Category',
     hooks: {
-      beforeValidate(instance, options) {
-        console.log(options)
-        instance.dataValues.slug = generateSlug(instance.getDataValue('name'));
-      },
-      afterValidate(instance, options) {
-
-      },
       beforeCreate(attributes, options) {
-        console.log(attributes)
+        attributes.name = fixName(attributes.getDataValue('name'));
+        attributes.slug = generateSlug(attributes.getDataValue('name'));
+      },
+      beforeUpdate(instance, options) {
+        instance.name = fixName(instance.getDataValue('name'));
+        instance.slug = generateSlug(instance.getDataValue('name'));
       }
     }
   });

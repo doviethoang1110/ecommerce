@@ -37,8 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    timestamps:true,
-    updatedAt:'updateTimestamp',
+    timestamps:false,
     modelName: 'Product',
   });
   return Product;

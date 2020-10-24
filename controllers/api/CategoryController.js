@@ -13,7 +13,7 @@ module.exports.show = async (req,res) => {
 
 module.exports.store = async function(req, res, next) {
     try{
-        // validateRequest(req);
+        validateRequest(req);
         let category = await CategoryService.store({name,parentId,status} = req.body);
         res.api(category.status,category.body);
     }catch(err){
@@ -23,11 +23,9 @@ module.exports.store = async function(req, res, next) {
 
 module.exports.update = async function (req, res, next) {
     try {
-        validateRequest(req);
+        // validateRequest(req);
         let param = req.params.id;
-        if (!param) {
-            res.api(400, 'Không tồn tại Id');
-        }
+        if (!param) res.api(400, 'Không tồn tại Id');
         let category = await CategoryService.update(parseInt(param), {name, parentId, status} = req.body);
         res.api(category.status, category.body);
     } catch (err) {
