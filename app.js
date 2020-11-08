@@ -32,12 +32,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
 
-app.use(async function (req,res,next) {
-  res.locals = {
-    categories: await menus()
-  }
-  next()
-})
+// app.use(async function (req,res,next) {
+//   res.locals = {
+//     categories: await menus()
+//   }
+//   next()
+// })
 
 // use cors
 app.use('/api/v1/', cors(corsOptions));

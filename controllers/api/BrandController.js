@@ -32,3 +32,34 @@ module.exports.update = async function (req, res, next) {
         next(err);
     }
 }
+
+module.exports.getRestore = async function (req, res, next) {
+    let list = await BrandService.getRestore();
+    res.api(200, list);
+}
+module.exports.restore = async function (req, res, next) {
+    try {
+        let id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        let doc = await BrandService.restore(id);
+        res.api(200, doc);
+    }catch (error) {
+        console.log(error);
+        error = {type:'error',status:400,message:error.message};
+        next(error)
+    }
+}
+module.exports.remove = async function (req, res, next) {
+    try {
+        let id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        let doc = req.method === 'PATCH'
+            ? await BrandService.remove(id)
+            : await BrandService.remove(id,true);
+        res.api(200, doc);
+    }catch (error) {
+        console.log(error);
+        error = {type:'error',status:400,message:error.message};
+        next(error)
+    }
+}

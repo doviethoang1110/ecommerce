@@ -36,10 +36,11 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
-    }
+    },
   }, {
     sequelize,
     timestamps:true,
+    paranoid: true,
     modelName: 'Brand',
   });
   return Brand;

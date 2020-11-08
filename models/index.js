@@ -1,6 +1,6 @@
 const { Sequelize,DataTypes } = require('sequelize');
 const { database } = require('../config/configuration');
-const { hookModel} = require('../helpers')
+const helpers = require('../helpers/index')
 
 const sequelize = new Sequelize(database.dbname, database.username, database.password, {
   host: "localhost",
@@ -15,10 +15,10 @@ const sequelize = new Sequelize(database.dbname, database.username, database.pas
   define:{
     hooks: {
       beforeCreate(attributes, options) {
-        hookModel(attributes);
+        helpers.hookModel(attributes);
       },
       beforeUpdate(instance, options) {
-        hookModel(instance);
+        helpers.hookModel(instance);
       }
     }
   }
