@@ -1,16 +1,51 @@
 const Repository = require('./Repository'),
-    { Product } = require('../models');
+    { products,brands,categories,skus } = require('../models');
 class ProductRepository extends Repository {
     constructor() {
-        super(Product);
+        super(products);
     }
-    async getAllProducts() {
-        let res = Product
-            .find({}, 'name status vision priority image')
-            .populate('brand', '-_id name')
-            .populate('categories' , '-_id name')
-            .sort({updatedAt: -1}).exec();
-        return res;
+    async findAllProductsAdmin() {
+        let data = await products.findAll({
+            attributes:['name','priority','vision','status','image','id'],
+            include:[
+                {
+                    model:brands,
+                    as:'brand',
+                    attributes:['name']
+                },
+                {
+                    model:categories,
+                    as:'categories',
+                    attributes:['name'],
+                    through:{ attributes:[] }
+                }
+            ]
+        })
+        return data;
+    }
+    async findById(id) {
+        return products.findByPk(id,
+            {
+                attributes: ['id','name','discount','description','status','vision','priority','image','imageList'],
+                include: [
+                    {
+                        model:brands,
+                        as:'brand',
+                        attributes:['id']
+                    },
+                    {
+                        model:categories,
+                        as:'categories',
+                        attributes:['id'],
+                        through:{ attributes:[] }
+                    },
+                    {
+                        model:skus,
+                        as:'skus',
+                        attributes:['id','values','exportPrice','importPrice','stock','code'],
+                    }
+                ]
+            });
     }
 }
 module.exports = ProductRepository;

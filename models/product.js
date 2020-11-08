@@ -2,20 +2,16 @@
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  class Product extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
-  };
+  class Product extends Model {};
   Product.init({
     name: {
       type: DataTypes.STRING,
+      unique: {
+        args: true,
+        msg: 'Tên đã được sử dụng!'
+      },
       validate: {
         notEmpty:{
           args: true,
@@ -28,16 +24,30 @@ module.exports = (sequelize, DataTypes) => {
     priority: DataTypes.INTEGER,
     vision: DataTypes.INTEGER,
     discount: DataTypes.FLOAT,
-    image: DataTypes.STRING,
-    description: DataTypes.TEXT,
-    imageList: DataTypes.JSON,
+    image: {
+      type:DataTypes.STRING,
+      defaultValue: ''
+    },
+    description: {
+      type: DataTypes.TEXT,
+      validate: {
+        notEmpty:{
+          args: true,
+          msg: 'Mô tả không được trống'
+        },
+      }
+    },
+    imageList: {
+      type:DataTypes.JSON,
+      defaultValue: []
+    },
     status: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     }
   }, {
     sequelize,
-    timestamps:false,
+    timestamps:true,
     modelName: 'Product',
   });
   return Product;

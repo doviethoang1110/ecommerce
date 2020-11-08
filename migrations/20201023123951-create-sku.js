@@ -13,6 +13,10 @@ module.exports = {
         allowNull: false,
         unique:true
       },
+      values: {
+        type: Sequelize.JSON,
+        allowNull: false,
+      },
       product_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

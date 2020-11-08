@@ -5,7 +5,7 @@ class Repository {
     constructor(Model) {
         this.collection = Model;
     }
-    async find({ where = {}, attributes = null, order = null, limit = null, group = null }) {
+    async find({ where = {}, attributes = null, include = {}, order = null, limit = null, group = null }) {
         return this.collection.findAll({where, attributes, order, group, limit});
     }
 
@@ -14,6 +14,7 @@ class Repository {
             const document = await this.collection.create(data);
             return document
         } catch (err) {
+            console.log(err)
             let errors = validate(err.errors);
             if(errors) throw errors;
         }
@@ -23,6 +24,15 @@ class Repository {
             let document = await this.collection.update(data,{where:{id},individualHooks:true});
             return document;
         }catch (err) {
+            let errors = validate(err.errors);
+            if(errors) throw errors;
+        }
+    }
+    async bulkCreate(array) {
+        try {
+            let data = await this.collection.bulkCreate(array);
+            return data;
+        }catch (e) {
             let errors = validate(err.errors);
             if(errors) throw errors;
         }

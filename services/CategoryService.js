@@ -4,14 +4,13 @@ class CategoryService {
         this.categoryRepository = container.get(CategoryRepository);
     }
     async printMenusWeb(id = 0) {
-        let categories = await this.categoryRepository.find({ query: { parentId: id, status: true }, field: 'name slug' });
+        let categories = await this.categoryRepository.find({ attributes: ['name','slug','id'], where: {status:true,parentId:id} });
         let output = [];
         for (let category of categories) {
             let cat = {};
-            cat.id = category._id;
-            cat.label = category.name;
+            cat.name = category.name;
             cat.slug = category.slug;
-            cat.children = await this.printMenusWeb(cat.id);
+            cat.children = await this.printMenusWeb(category.id);
             output.push(cat);
         }
         return output;

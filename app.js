@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
+const {menus} = require('./helpers')
 // Cors
 const cors = require("cors");
 const { application } = require('./config/configuration');
@@ -30,8 +30,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads',express.static(path.join(__dirname, 'uploads')))
+app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
 
+app.use(async function (req,res,next) {
+  res.locals = {
+    categories: await menus()
+  }
+  next()
+})
 
 // use cors
 app.use('/api/v1/', cors(corsOptions));
@@ -39,6 +45,7 @@ app.use('/api/v1/', cors(corsOptions));
 // use routers
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
 app.use('/api/v1/categories', category);
 app.use('/api/v1/brands', brand);
 app.use('/api/v1/products', product);
@@ -57,6 +64,7 @@ app.use(function(req, res, next) {
 
 // exception handler
 app.use(function (err, req, res, next) {
+  if(err.type) res.api(err.status,err.message);
   res.api(err.status,err.body);
 });
 
