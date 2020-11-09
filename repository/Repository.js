@@ -29,10 +29,10 @@ class Repository {
             if(errors) throw errors;
         }
     }
-    async restore(id) {
+    async restore(id,attributes) {
         try {
             let data = await Promise.all([this.collection.restore({where: {id}}),
-                this.collection.findByPk(id,{paranoid: false,attributes:['id','image','status','name']})]);
+                this.collection.findByPk(id,{paranoid: false,attributes})]);
             return data[1];
         }catch (err) {
             console.log(err);

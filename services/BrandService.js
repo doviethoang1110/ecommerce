@@ -35,7 +35,7 @@ class BrandService {
         return brands;
     }
     async restore(id) {
-        let doc = await this.brandRepository.restore(id);
+        let doc = await this.brandRepository.restore(id,['id','image','status','name']);
         return doc;
     }
     async remove(id,force) {

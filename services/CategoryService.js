@@ -1,4 +1,6 @@
 const { CategoryRepository } = require('../repository');
+const { Op } = require("sequelize");
+
 class CategoryService {
     constructor(container) {
         this.categoryRepository = container.get(CategoryRepository);
@@ -40,11 +42,28 @@ class CategoryService {
             throw { status: 400, body: err };
         }
     }
-
-    async show(id) {
-        let category = await this.categoryRepository.find({ query: { _id: id }, field: 'name parentId status', multiple: false });
-        console.log(category)
-        return category;
+    async getRestore() {
+        let categories = await this.categoryRepository.find({ attributes: ['id','name'],paranoid:false, where: {deletedAt: {[Op.not]:null}}});
+        return categories;
     }
+    async restore(id) {
+        let doc = await this.categoryRepository.restore(id,['id','name','status','parentId']);
+        return doc;
+    }
+    async remove(id,force) {
+        try {
+            let doc = await this.categoryRepository.remove(id,force);
+            return { status: 200, body: doc};
+        }catch (e) {
+            console.log(e);
+            throw {status: 400, body: e};
+        }
+    }
+
+    // async show(id) {
+    //     let category = await this.categoryRepository.find({ query: { _id: id }, field: 'name parentId status', multiple: false });
+    //     console.log(category)
+    //     return category;
+    // }
 }
 module.exports = CategoryService;

@@ -43,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     timestamps: true,
+    paranoid: true,
     modelName: 'Category'
   });
   return Category;
