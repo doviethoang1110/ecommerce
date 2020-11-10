@@ -26,10 +26,16 @@ module.exports.updateSkus = async function(req, res, next) {
 }
 module.exports.update = async function(req, res, next) {
     try{
-        console.log(req.file,req.body,req.files)
-        // let data = await ProductService.update(req.body);
-        // res.api(data.status,data.body);
+        let data;
+        let body = req.body;
+        if(req.file) data = {id:body.id, name:body.name, categories:body.categories, brand_id:body.brand, image:req.file.filename,
+            description:body.description, priority:body.priority, status:body.status, vision:body.vision, discount:body.discount };
+        else data = {id:body.id, name:body.name, categories:body.categories, brand_id:body.brand,
+            description:body.description, priority:body.priority, status:body.status, vision:body.vision, discount:body.discount };
+        let doc = await ProductService.update(data);
+        res.api(doc.status,doc.body);
     }catch(err){
+        console.log(err)
         next(err);
     }
 }

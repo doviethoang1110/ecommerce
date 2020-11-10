@@ -14,8 +14,14 @@ class ProductService {
         return product;
     }
     async update(data) {
-        let product = await this.productRepository.update(data);
-        return product;
+        try {
+            let doc = await this.productRepository.update(data.id, data);
+            let product = await this.getProductById(data.id);
+            return { status: 200, body: product };
+        } catch (err) {
+            console.log(err)
+            throw { status: 400, body: err };
+        }
     }
 
     async store(product) {
