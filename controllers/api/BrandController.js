@@ -37,6 +37,7 @@ module.exports.getRestore = async function (req, res, next) {
     let list = await BrandService.getRestore();
     res.api(200, list);
 }
+
 module.exports.restore = async function (req, res, next) {
     try {
         let id = req.params.id;
@@ -49,6 +50,7 @@ module.exports.restore = async function (req, res, next) {
         next(error)
     }
 }
+
 module.exports.remove = async function (req, res, next) {
     try {
         let id = req.params.id;

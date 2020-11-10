@@ -9,6 +9,10 @@ class Repository {
         return this.collection.findAll({where, attributes, order, group, limit,paranoid});
     }
 
+    async findOne(id,{where = {}, attributes = null, include = [],paranoid = true}) {
+        return this.collection.findByPk(id,{where, attributes, include, paranoid});
+    }
+
     async create(data) {
         try {
             const document = await this.collection.create(data);

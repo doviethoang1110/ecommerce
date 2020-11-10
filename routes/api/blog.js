@@ -4,6 +4,12 @@ const router = require('express').Router(),
 
 const { upload } = require('../../middlewares');
 router.get('/', BlogController.index)
-    .post('/',blogValidate,upload.single('image'), BlogController.store);
+    .get('/restore', BlogController.getRestore)
+    .get('/:id', BlogController.edit)
+    .post('/:id',blogValidate, upload.single('image'), BlogController.update)
+    .patch('/restore/:id', BlogController.restore)
+    .patch('/:id', BlogController.remove)
+    .post('/',blogValidate,upload.single('image'), BlogController.store)
+    .delete('/:id', BlogController.remove);
 
 module.exports = router;
