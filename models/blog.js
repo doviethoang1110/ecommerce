@@ -3,9 +3,9 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Brand extends Model {};
-  Brand.init({
-    name: {
+  class Blog extends Model {};
+  Blog.init({
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: {
@@ -24,6 +24,19 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     slug: DataTypes.STRING,
+    content: {
+      type: DataTypes.TEXT,
+      validate: {
+        notEmpty:{
+          args: true,
+          msg: 'Mô tả không được trống'
+        }
+      }
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     image: {
       type: DataTypes.STRING,
       validate: {
@@ -33,15 +46,11 @@ module.exports = (sequelize, DataTypes) => {
         },
       }
     },
-    status: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
   }, {
     sequelize,
     timestamps:true,
     paranoid: true,
-    modelName: 'Brand',
+    modelName: 'Blog',
   });
-  return Brand;
+  return Blog;
 };

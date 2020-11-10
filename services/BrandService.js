@@ -1,6 +1,5 @@
 const { BrandRepository } = require('../repository');
-const { Op } = require("sequelize");
-
+const sequelize = require('sequelize')
 class BrandService {
     constructor(container) {
         this.brandRepository = container.get(BrandRepository);
@@ -9,6 +8,10 @@ class BrandService {
     async getAllBrands() {
         let brands = await this.brandRepository.find({ attributes: ['id','name', 'status', 'image'] });
         return brands;
+    }
+    async getBrandImages() {
+        let images = await this.brandRepository.find({attributes: ['image'],order: sequelize.literal('rand()'),limit: 8});
+        return images;
     }
     async store(brand) {
         try {
@@ -31,7 +34,7 @@ class BrandService {
         }
     }
     async getRestore() {
-        let brands = await this.brandRepository.find({ attributes: ['id','name','image'],paranoid:false, where: {deletedAt: {[Op.not]:null}}});
+        let brands = await this.brandRepository.find({ attributes: ['id','name','image'],paranoid:false, where: {deletedAt: {[sequelize.Op.not]:null}}});
         return brands;
     }
     async restore(id) {

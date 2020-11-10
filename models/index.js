@@ -32,7 +32,7 @@ db.products = require("../models/product")(sequelize, DataTypes);
 db.options = require("../models/option")(sequelize, DataTypes);
 db.optionValues = require("../models/optionvalue")(sequelize, DataTypes);
 db.skus = require("../models/sku")(sequelize, DataTypes);
-// db.skuValues = require("../models/sku")
+db.blogs = require("../models/blog")(sequelize, DataTypes);
 // relationships
 db.categories.belongsToMany(db.products,{
   through: "Category_Product",

@@ -3,5 +3,6 @@ module.exports = {
     BrandRepository: require('./BrandRepository'),
     ProductRepository: require('./ProductRepository'),
     OptionRepository: require('./OptionRepository'),
-    SkuRepository: require('./SkuRepository')
+    SkuRepository: require('./SkuRepository'),
+    BlogRepository: require('./BlogRepository')
 }

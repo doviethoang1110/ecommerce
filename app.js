@@ -19,6 +19,7 @@ const usersRouter = require('./routes/users');
 const category = require('./routes/api/category');
 const brand = require('./routes/api/brand');
 const product = require('./routes/api/product');
+const blog = require('./routes/api/blog');
 const app = express();
 
 // view engine setup
@@ -31,13 +32,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
+let categories;
+app.use(async function (req,res,next) {
+  if(!categories) {
+    let data = await menus
+    categories = await data()
+  }
+  app.locals = {
+    categories
+  }
+  next()
+})
 
-// app.use(async function (req,res,next) {
-//   res.locals = {
-//     categories: await menus()
-//   }
-//   next()
-// })
 
 // use cors
 app.use('/api/v1/', cors(corsOptions));
@@ -49,6 +55,7 @@ app.use('/users', usersRouter);
 app.use('/api/v1/categories', category);
 app.use('/api/v1/brands', brand);
 app.use('/api/v1/products', product);
+app.use('/api/v1/blogs', blog);
 
 
 // overrideMethods

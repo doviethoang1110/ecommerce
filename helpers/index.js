@@ -1,8 +1,14 @@
 const {CategoryService} = require('../container');
-module.exports.menus = async () => {
-    let list = await CategoryService.printMenusWeb();
-    return list;
-}
+module.exports.menus = (async () => {
+    let check = false;
+    return async function(){
+        if(!check) {
+            check = true;
+            let list = await CategoryService.printMenusWeb();
+            return list;
+        }
+    }
+})();
 generateSlug = (name) => {
     let slug;
     slug = name.toLowerCase();
@@ -33,5 +39,8 @@ module.exports.hookModel = (attributes) => {
     if(attributes.name) {
         attributes.name = fixName(attributes.getDataValue('name'));
         attributes.slug = generateSlug(attributes.getDataValue('name'));
+    }else {
+        attributes.title = fixName(attributes.getDataValue('title'));
+        attributes.slug = generateSlug(attributes.getDataValue('title'));
     }
 }

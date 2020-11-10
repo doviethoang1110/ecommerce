@@ -5,17 +5,24 @@ class CategoryService {
     constructor(container) {
         this.categoryRepository = container.get(CategoryRepository);
     }
-    async printMenusWeb(id = 0) {
-        let categories = await this.categoryRepository.find({ attributes: ['name','slug','id'], where: {status:true,parentId:id} });
-        let output = [];
-        for (let category of categories) {
-            let cat = {};
-            cat.name = category.name;
-            cat.slug = category.slug;
-            cat.children = await this.printMenusWeb(category.id);
-            output.push(cat);
+    async treeMenus (datas,id = 0) {
+        if(Array.isArray(datas)) {
+            let categories = datas.filter(category => category.parentId === id);
+            let temp = datas.filter(e => !categories.includes(e))
+            let output = [];
+            for (let category of categories) {
+                let cat = {};
+                cat.name = category.name;
+                cat.slug = category.slug;
+                cat.children = await this.treeMenus(temp,category.id);
+                output.push(cat);
+            }
+            return output;
         }
-        return output;
+    }
+    async printMenusWeb() {
+        let categories = await this.categoryRepository.find({ attributes: ['id','name','slug','parentId'], where: {status:true} });
+        return await this.treeMenus(categories);
     }
 
     async getAllCategories() {
