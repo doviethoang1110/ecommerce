@@ -13,6 +13,14 @@ class Repository {
         return this.collection.findByPk(id,{where, attributes, include, paranoid});
     }
 
+    async findOneByAttribute({where = {}, attributes = null, include = [],paranoid = true}) {
+        return this.collection.findOne({where, attributes, include, paranoid});
+    }
+
+    async pagination({attributes, page, paginate, order, where}) {
+        return await this.collection.paginate({attributes,page,paginate,order,where});
+    }
+
     async create(data) {
         try {
             const document = await this.collection.create(data);

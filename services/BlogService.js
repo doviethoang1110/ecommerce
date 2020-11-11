@@ -5,10 +5,36 @@ class BlogService {
     constructor(container) {
         this.blogRepository = container.get(BlogRepository);
     }
+
     async getAllBlogs() {
-        let blogs = this.blogRepository.find({});
-        return blogs;
+        return this.blogRepository.find({attributes:['id','title','image','status']});;
     }
+
+    getBlogsForIndex() {
+        return this.blogRepository.find(
+            {where: {status: true},attributes:['slug','title','image','createdAt'],order:sequelize.literal('rand()'),limit: 5});
+    }
+
+    getBlogs() {
+        return this.blogRepository.find(
+            {where: {status: true},attributes:['slug','title','image','createdAt']})
+    }
+
+    paginate(page = 1, paginate = 5) {
+        return this.blogRepository.pagination({
+            attributes: ['slug','title','image','createdAt'],
+            where: {status: true},
+            page,
+            order: [['createdAt','desc']],
+            paginate
+        });
+    }
+
+    getRecentBlogs() {
+        return this.blogRepository.find(
+            {attributes:['slug','image','createdAt'],where:{status:true},limit:8,order: [['createdAt','desc']]})
+    }
+
     async store(blog) {
         try {
             let doc = await this.blogRepository.create(blog);
@@ -41,18 +67,21 @@ class BlogService {
     }
 
     async getRestore() {
-        let blogs = await this.blogRepository.find({ attributes: ['id','title','image'],paranoid:false, where: {deletedAt: {[sequelize.Op.not]:null}}});
-        return blogs;
+        return await this.blogRepository.find(
+            { attributes: ['id','title','image'],paranoid:false, where: {deletedAt: {[sequelize.Op.not]:null}}});;
     }
 
     async restore(id) {
-        let doc = await this.blogRepository.restore(id,['id','image','status','title']);
-        return doc;
+        return await this.blogRepository.restore(id,['id','image','status','title']);;
     }
 
     async findById(id) {
-        let blog = await this.blogRepository.findOne(id,{attributes:['id','title','image','content','status']});
-        return blog;
+        return await this.blogRepository.findOne(id,{attributes:['id','title','image','content','status']});;
+    }
+
+    async findOne(slug) {
+        return await this.blogRepository.findOneByAttribute(
+            {where: {slug,status: true},attributes:['title','image','content','createdAt']});
     }
 }
 module.exports = BlogService;

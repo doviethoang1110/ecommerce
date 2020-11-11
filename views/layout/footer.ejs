@@ -345,6 +345,7 @@
 <script src="../assets/js/script.js"></script>
 
 <script>
+    let url = window.location.protocol+'//'+window.location.host
     $(window).on('load', function () {
         setTimeout(function () {
             $('#exampleModal').modal('show');
@@ -356,5 +357,8 @@
 
     function closeSearch() {
         document.getElementById("search-overlay").style.display = "none";
+    }
+    function formatDate(date) {
+        return new Intl.DateTimeFormat('en', { year: 'numeric',month: 'short',day: '2-digit' }).format(date)
     }
 </script>

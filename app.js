@@ -3,7 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const {menus} = require('./helpers')
+const {menus} = require('./helpers');
+const moment = require('moment');
 // Cors
 const cors = require("cors");
 const { application } = require('./config/configuration');
@@ -43,14 +44,20 @@ app.use(async function (req,res,next) {
   }
   next()
 })
+app.use((req, res, next) => {
+  res.locals.formatDate = function (date) {
+    return moment(date).format('DD-MMMM-YYYY');
+  }
+  next();
+})
 
-
-// use cors
-app.use('/api/v1/', cors(corsOptions));
 
 // use routers
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+// use cors
+app.use('/api/v1/', cors(corsOptions));
 
 app.use('/api/v1/categories', category);
 app.use('/api/v1/brands', brand);

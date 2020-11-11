@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('layout/css');%>
+</head>
+<body>
+<%- include('layout/header');%>
+<%- include('layout/breadcumb');%>
+<section class="section-b-space blog-page ratio2_3" id="blog-list">
+    <div class="container">
+        <div class="row">
+            <!--Blog sidebar start-->
+            <div class="col-xl-3 col-lg-4 col-md-5">
+                <div class="blog-sidebar">
+                    <div class="theme-card">
+                        <h4>Recent Blog</h4>
+                        <ul class="recent-blog">
+                            <%if(blogs.length) {%>
+                                <% blogs.forEach(function (blog) { %>
+                                    <li>
+                                        <a href="/blogs/<%=blog.slug%>">
+                                            <div class="media">
+                                                <img class="img-fluid blur-up lazyloaded" src="/uploads/<%=blog.image%>">
+                                                <div class="media-body align-self-center">
+                                                    <h6><%=formatDate(blog.createdAt)%></h6>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <% }) %>
+                            <% } %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--Blog sidebar start-->
+            <!--Blog List start-->
+            <div class="col-xl-9 col-lg-8 col-md-7 order-sec" id="blogs">
+
+            </div>
+            <div class="loader" hidden></div>
+            <!--Blog List start-->
+        </div>
+    </div>
+</section>
+<style>
+    .loader {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 2s linear infinite;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+<%- include('layout/footer');%>
+<script>
+    let currentPage = 1;
+    let delay = false;
+    let totalPage;
+    $(document).ready(function () {
+        getBlogs(currentPage);
+        $(window).scroll(function() {
+            if($(window).scrollTop() > $(".blog-page").height()) {
+                if(currentPage>totalPage-1) return;
+                else {
+                    if(delay === true) return;
+                    delay = true;
+                    currentPage++;
+                    $(".loader").prop("hidden",false);
+                    setTimeout(()=>{
+                        getBlogs(currentPage).always(function () {
+                            $(".loader").prop("hidden",true);
+                            delay = false;
+                        });
+                    },1000);
+                    return;
+                }
+            }
+        });
+    });
+    function getBlogs(page) {
+        return $.ajax({
+            async:false,
+            url: url+"/blogs?page="+page,
+            method:"GET",
+            success:function (response) {
+                currentPage = page;
+                totalPage = response.pages;
+                response.docs.forEach(blog=>{
+                    $("#blogs").append(`
+                        <div class="row blog-media">
+                            <div class="col-xl-6">
+                                <div class="blog-left">
+                                    <a href="/blogs/${blog.slug}" class="bg-size blur-up lazyloaded" style="background-image: url(&quot;\/uploads/${blog.image}\&quot;); background-size: cover; background-position: center center; display: block;"></a>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="blog-right">
+                                    <div>
+                                        <h6>`+formatDate(new Date(blog.createdAt))+`</h6>
+                                        <a href="/blogs/${blog.slug}">
+                                            <h4>${blog.title}</h4>
+                                        </a>
+                                        <ul class="post-social">
+                                            <li>Posted By : Admin</li>
+                                            <li><i class="fa fa-comments"></i> 10 Comment</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                })
+            },
+            error:function (error) {
+                console.log(error.response.data);
+            }
+        });
+    }
+</script>
+</body>
+</html>
