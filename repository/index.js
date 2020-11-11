@@ -4,5 +4,6 @@ module.exports = {
     ProductRepository: require('./ProductRepository'),
     OptionRepository: require('./OptionRepository'),
     SkuRepository: require('./SkuRepository'),
-    BlogRepository: require('./BlogRepository')
+    BlogRepository: require('./BlogRepository'),
+    CurrencyRepository: require('./CurrencyRepository')
 }

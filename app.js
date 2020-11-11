@@ -21,6 +21,8 @@ const category = require('./routes/api/category');
 const brand = require('./routes/api/brand');
 const product = require('./routes/api/product');
 const blog = require('./routes/api/blog');
+const currency = require('./routes/api/currency');
+
 const app = express();
 
 // view engine setup
@@ -63,6 +65,7 @@ app.use('/api/v1/categories', category);
 app.use('/api/v1/brands', brand);
 app.use('/api/v1/products', product);
 app.use('/api/v1/blogs', blog);
+app.use('/api/v1/currencies', currency);
 
 
 // overrideMethods
