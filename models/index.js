@@ -30,7 +30,6 @@ db.categories = require("../models/category")(sequelize, DataTypes);
 db.brands = require("../models/brand")(sequelize, DataTypes);
 db.products = require("../models/product")(sequelize, DataTypes);
 db.options = require("../models/option")(sequelize, DataTypes);
-db.optionValues = require("../models/optionvalue")(sequelize, DataTypes);
 db.skus = require("../models/sku")(sequelize, DataTypes);
 db.blogs = require("../models/blog")(sequelize, DataTypes);
 db.currencies = require('../models/currency')(sequelize, DataTypes);
@@ -52,6 +51,11 @@ db.products.belongsTo(db.brands,{
   as: "brand",
   foreignKey: "brand_id"
 });
+
+db.products.hasMany(db.options, {
+  foreignKey:'productId',
+  as:'options'
+})
 
 db.products.hasMany(db.skus, {
   foreignKey:'product_id',

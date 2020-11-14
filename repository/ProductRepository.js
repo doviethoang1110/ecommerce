@@ -1,5 +1,8 @@
 const Repository = require('./Repository'),
-    { products,brands,categories,skus } = require('../models');
+
+    { products,brands,categories,skus,sequelize } = require('../models');
+const { QueryTypes } = require('sequelize');
+
 class ProductRepository extends Repository {
     constructor() {
         super(products);
@@ -46,6 +49,12 @@ class ProductRepository extends Repository {
                     }
                 ]
             });
+    }
+
+    async getProductsForWeb() {
+        return await
+            sequelize.query("select p.id,p.name,p.discount,p.priority,p.slug,p.image,min(s.exportPrice) as `priceFrom`, max(s.exportPrice) as `priceTo`" +
+                "from Products p inner join Skus s on s.product_id = p.id where p.status = true group by p.name", { type: QueryTypes.SELECT });
     }
 }
 module.exports = ProductRepository;

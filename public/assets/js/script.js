@@ -1094,6 +1094,14 @@
         $(".color-selector ul li").removeClass("active");
         $(this).addClass("active");
     });
+    $('.size-box .select-size li').on('click', function(e) {
+        $(".size-box .select-size li").removeClass("custom-active");
+        $(this).addClass("custom-active");
+    });
+    $('.size-box .select-material li').on('click', function(e) {
+        $(".size-box .select-material li").removeClass("custom-active");
+        $(this).addClass("custom-active");
+    });
 //list layout view
     $('.list-layout-view').on('click', function(e) {
         $('.collection-grid-view').css('opacity', '0');

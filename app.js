@@ -3,8 +3,9 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const {menus} = require('./helpers');
+const {singleton} = require('./helpers');
 const moment = require('moment');
+const session = require('express-session');
 // Cors
 const cors = require("cors");
 const { application } = require('./config/configuration');
@@ -35,17 +36,32 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
+
+// let currencies;
+// let categories;
+app.use(session({secret: 'my secret key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }}))
+
+//singleton variable
 let categories;
+let currencies;
+
 app.use(async function (req,res,next) {
   if(!categories) {
-    let data = await menus
-    categories = await data()
+    let func = await singleton;
+    let {globalCurrencies, globalCategories} = await func();
+    currencies = globalCurrencies
+    categories = globalCategories
   }
-  app.locals = {
-    categories
+  res.locals = {
+    categories,
+    currencies
   }
   next()
-})
+});
+
 app.use((req, res, next) => {
   res.locals.formatDate = function (date) {
     return moment(date).format('DD-MMMM-YYYY');

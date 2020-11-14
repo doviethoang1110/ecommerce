@@ -1,4 +1,4 @@
-const {BrandService,BlogService} = require('../../container')
+const {BrandService,BlogService,ProductService} = require('../../container')
 module.exports.index = async function (req, res) {
     res.render('index' ,{
         title:'Multikart',
@@ -30,3 +30,17 @@ module.exports.blogDetail = async function (req, res) {
         blog
     })
 }
+
+module.exports.getProducts = async function (req, res) {
+    res.api(200, await ProductService.getProductsForWeb());
+}
+
+module.exports.productDetail = async function (req, res) {
+    let product = await ProductService.getProductBySlug(req.params.slug);
+    res.render('product-detail', {
+        title: product.name,
+        product
+    })
+}
+
+module.exports.pro

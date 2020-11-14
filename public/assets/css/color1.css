@@ -71,6 +71,12 @@ body {
     body.christmas section {
       overflow: hidden; }
 
+.custom-active {
+  background-color: red;
+  font-weight: bold;
+  color: yellow;
+}
+
 h1 {
   font-size: 60px;
   color: #222222;
@@ -2790,7 +2796,6 @@ header {
   margin: 0 15px 30px; }
   .no-slider.five-product .product-box:nth-last-child(-n + 5) {
     margin: 0 15px 0; }
-
 .product-para p {
   margin-bottom: 0;
   padding-bottom: 30px;
@@ -7142,26 +7147,32 @@ footer {
   cursor: pointer;
   border: 1px solid #444444; }
 
-.color-selector ul .color-1 {
+.color-selector ul .white {
   background-color: white; }
 
-.color-selector ul .color-2 {
+.color-selector ul .black {
+  background-color: black; }
+
+.color-selector ul .grey {
   background-color: grey; }
 
-.color-selector ul .color-3 {
+.color-selector ul .red {
   background-color: red; }
 
-.color-selector ul .color-4 {
+.color-selector ul .purple {
   background-color: purple; }
 
-.color-selector ul .color-5 {
+.color-selector ul .blue {
   background-color: blue; }
 
-.color-selector ul .color-6 {
+.color-selector ul .yellow {
   background-color: yellow; }
 
-.color-selector ul .color-7 {
+.color-selector ul .green {
   background-color: green; }
+
+.color-selector ul .orange {
+  background-color: orange; }
 
 .color-selector ul li.active {
   border: 1px solid black;
@@ -8322,8 +8333,9 @@ footer {
   margin-top: 10px;
   margin-bottom: 10px; }
   .product-right .size-box ul li {
-    height: 35px;
-    width: 35px;
+    height: 60px;
+    width: 60px;
+    padding-top: 15px;
     border-radius: 50%;
     margin-right: 10px;
     cursor: pointer;

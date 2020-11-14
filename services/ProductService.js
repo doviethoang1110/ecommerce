@@ -1,4 +1,5 @@
 const { ProductRepository,OptionRepository,SkuRepository } = require('../repository');
+const { skus,options } = require('../models');
 class ProductService {
     constructor(container) {
         this.productRepository = container.get(ProductRepository);
@@ -9,6 +10,30 @@ class ProductService {
         let products = await this.productRepository.findAllProductsAdmin();
         return products;
     }
+
+    async getProductsForWeb() {
+        return await this.productRepository.getProductsForWeb();
+    }
+
+    async getProductBySlug(slug) {
+        return await this.productRepository.findOneByAttribute({
+            attributes: ['id','name','discount','description','image'],
+            where: {status:true,slug},
+            include: [
+                {
+                    model:skus,
+                    as:'skus',
+                    attributes:['code','exportPrice','stock','values']
+                },
+                {
+                    model:options,
+                    as:'options',
+                    attributes:['id','name','values']
+                },
+            ]
+        });
+    }
+
     async getProductById(id) {
         let product = await this.productRepository.findById(id);
         return product;

@@ -1,14 +1,20 @@
-const {CategoryService} = require('../container');
-module.exports.menus = (async () => {
+const {CategoryService, CurrencyService} = require('../container');
+
+module.exports.singleton = (function () {
+    let globalCategories;
+    let globalCurrencies;
     let check = false;
     return async function(){
         if(!check) {
             check = true;
-            let list = await CategoryService.printMenusWeb();
-            return list;
+            let [value1, value2] = await Promise.all([CurrencyService.getAllCurrencies(), CategoryService.printMenusWeb()]);
+            globalCurrencies = value1;
+            globalCategories = value2;
+            return {globalCurrencies,globalCategories};
         }
     }
 })();
+
 generateSlug = (name) => {
     let slug;
     slug = name.toLowerCase();

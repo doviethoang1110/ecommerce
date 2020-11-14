@@ -15,12 +15,12 @@
                         <form
                                 action="https://pixelstrap.us19.list-manage.com/subscribe/post?u=5a128856334b598b395f1fc9b&amp;id=082f74cbda"
                                 class="form-inline subscribe-form auth-form needs-validation" method="post"
-                                id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank">
+                                name="mc-embedded-subscribe-form" target="_blank">
                             <div class="form-group mx-sm-3">
-                                <input type="text" class="form-control" name="EMAIL" id="mce-EMAIL"
+                                <input type="text" class="form-control" name="EMAIL"
                                        placeholder="Enter your email" required="required">
                             </div>
-                            <button type="submit" class="btn btn-solid" id="mc-submit">subscribe</button>
+                            <button type="submit" class="btn btn-solid" >subscribe</button>
                         </form>
                     </div>
                 </div>
@@ -155,13 +155,12 @@
                                     <form
                                             action="https://pixelstrap.us19.list-manage.com/subscribe/post?u=5a128856334b598b395f1fc9b&amp;id=082f74cbda"
                                             class="auth-form needs-validation" method="post"
-                                            id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"
+                                            name="mc-embedded-subscribe-form"
                                             target="_blank">
                                         <div class="form-group mx-sm-3">
-                                            <input type="email" class="form-control" name="EMAIL" id="mce-EMAIL"
+                                            <input type="email" class="form-control" name="EMAIL"
                                                    placeholder="Enter your email" required="required">
-                                            <button type="submit" class="btn btn-solid"
-                                                    id="mc-submit">subscribe</button>
+                                            <button type="submit" class="btn btn-solid">subscribe</button>
                                         </div>
                                     </form>
                                 </div>
@@ -343,14 +342,45 @@
 
 <!-- Theme js-->
 <script src="../assets/js/script.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
-    let url = window.location.protocol+'//'+window.location.host
-    $(window).on('load', function () {
-        setTimeout(function () {
-            $('#exampleModal').modal('show');
-        }, 2500);
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    })
+    function toast(icon,title) {
+        Toast.fire({icon, title})
+    }
+    const listCart = JSON.parse(localStorage.getItem("listCart")) ? JSON.parse(localStorage.getItem("listCart")) : [];
+    let url = window.location.protocol+'//'+window.location.host;
+    let currencies = '<%- JSON.stringify(currencies) %>';
+    let currency = localStorage.getItem("currency") ? JSON.parse(localStorage.getItem("currency")) : JSON.parse(currencies)[0];
+    $(document).ready(function () {
+        for (let i = 0; i < $('.currencies').length; i++)
+            if(+$($('.currencies')[i]).attr('id') === +currency.id) {
+                $($('.currencies')[i]).css("background-color","aqua")
+                break;
+            }
+        $(document).on('click','.currencies',function (e) {
+            e.preventDefault();
+            currency = JSON.parse(currencies).find(c => +c.id === +$(this).attr('id'));
+            localStorage.setItem("currency",JSON.stringify(currency));
+            $('.currencies').css("background-color","");
+            $(this).css("background-color","aqua");
+        });
+
+        $(document).on('click',"div.close-circle a",function (event) {
+            event.preventDefault();
+            removeCart($(this).parent().parent().attr('id'));
+        });
+
+        if(listCart.length) addTopCart();
+        else $("#listCart").html("<li><h4>Chưa có sản phẩm nào</h4></li>");
     });
+
     function openSearch() {
         document.getElementById("search-overlay").style.display = "block";
     }
@@ -358,7 +388,76 @@
     function closeSearch() {
         document.getElementById("search-overlay").style.display = "none";
     }
+
     function formatDate(date) {
         return new Intl.DateTimeFormat('en', { year: 'numeric',month: 'short',day: '2-digit' }).format(date)
+    }
+
+    function formatMoney(money) {
+        let cash = currency.rate !== 1 ? money/currency.rate/1000 : money/currency.rate
+        return new Intl.NumberFormat('en-US',{ style: 'currency', currency: currency.code }).format(Math.round(cash));
+    }
+
+    function calTotal(){
+        let total = 0;
+        listCart.forEach(cart=>{
+            total += +(cart.price*cart.quantity);
+        });
+        return total;
+    }
+
+    function addTopCart() {
+        $("#listCart").html("");
+        listCart.forEach(c => {
+            $("#listCart").append(`
+                <li id="${c.id}" content="${c.id}">
+                    <div class="media">
+                        <a href="#"><img class="mr-3" src="/uploads/${c.image}" alt="Generic placeholder image"></a>
+                            <div class="media-body">
+                                    <a href="#"><h4>${c.name}</h4></a>
+                                    <span>${c.id}</span>
+                                    <h4><span>${c.quantity} x `+formatMoney(c.price)+`</span></h4>
+                            </div>
+                    </div>
+                    <div class="close-circle">
+                        <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    </div>
+                </li>
+            `);
+        });
+        $("#listCart").append(`
+                <li>
+                    <div class="total">
+                        <h5>subtotal : <span>`+formatMoney(calTotal())+`</span></h5>
+                    </div>
+                </li>
+                <li>
+                    <div class="buttons">
+                        <a href="" class="view-cart">view cart</a>
+                        <a href="" class="checkout">checkout</a>
+                    </div>
+                </li>
+            `);
+    }
+
+    function removeCart(id){
+        if(confirm("Bạn chắc không ?")){
+            let cart = listCart.find(c => c.id === id);
+            toast("success","Xóa thành công");
+            listCart.splice(listCart.indexOf(cart),1);
+            localStorage.setItem("listCart", JSON.stringify(listCart));
+            $(`#${id}`).remove();
+            // $("tbody[content='"+id+"']").remove();
+            // getCartNumber();
+            if(!listCart.length){
+                $("#listCart").html("<h4>Chưa có sản phẩm nào</h4>");
+                // $("#cartView").html("<h2>Chưa có sản phẩm nào</h2>");
+            }else{
+                $("div.total h5 span").text(formatMoney(calTotal()));
+                // $("div.total h5 span").text(new Intl.NumberFormat('en-US', {style: 'currency', currency: symbol.code}).format(parseFloat(symbol.rate !== 1 ?calTotal()/symbol.rate/1000 : calTotal()/symbol.rate)));
+            }
+        }else{
+            return false;
+        }
     }
 </script>
