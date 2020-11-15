@@ -43,4 +43,14 @@ module.exports.productDetail = async function (req, res) {
     })
 }
 
-module.exports.pro
+module.exports.carts = async function (req, res) {
+    res.render('cart', {
+        title: 'Giỏ hàng'
+    })
+}
+
+module.exports.checkout = async function (req, res) {
+    res.render('checkout', {
+        title: 'Thanh toán'
+    })
+}

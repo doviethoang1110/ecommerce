@@ -401,6 +401,7 @@
 
         $("#addCart").click(function (e) {
             e.preventDefault();
+            if(param.length !== length) return;
             let quantity = +$("input[name='quantity']").val();
             if(quantity < 1) {
                 $("#message").text('Số lượng phải lớn hơn 1');
@@ -417,8 +418,10 @@
                 image,
                 price,
                 values: sku.values,
+                max: sku.stock
             };
             addCart(product,sku.stock);
+            getCartNumber()
         })
     })
 </script>

@@ -293,8 +293,9 @@
 
 <!-- cart start -->
 <div class="addcart_btm_popup" id="fixed_cart_icon">
-    <a href="#" class="fixed_cart">
+    <a href="/gio-hang" class="fixed_cart">
         <i class="ti-shopping-cart"></i>
+        <span id="cartSize"></span>
     </a>
 </div>
 <!-- cart end -->
@@ -344,21 +345,23 @@
 <script src="../assets/js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
-    })
     function toast(icon,title) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true
+        })
         Toast.fire({icon, title})
     }
+
     const listCart = JSON.parse(localStorage.getItem("listCart")) ? JSON.parse(localStorage.getItem("listCart")) : [];
     let url = window.location.protocol+'//'+window.location.host;
     let currencies = '<%- JSON.stringify(currencies) %>';
     let currency = localStorage.getItem("currency") ? JSON.parse(localStorage.getItem("currency")) : JSON.parse(currencies)[0];
     $(document).ready(function () {
+        getCartNumber();
         for (let i = 0; i < $('.currencies').length; i++)
             if(+$($('.currencies')[i]).attr('id') === +currency.id) {
                 $($('.currencies')[i]).css("background-color","aqua")
@@ -406,6 +409,12 @@
         return total;
     }
 
+    function getCartNumber() {
+        let number = 0;
+        listCart.forEach(c => number += +c.quantity);
+        $("#cartSize").text(number);
+    }
+
     function addTopCart() {
         $("#listCart").html("");
         listCart.forEach(c => {
@@ -433,8 +442,8 @@
                 </li>
                 <li>
                     <div class="buttons">
-                        <a href="" class="view-cart">view cart</a>
-                        <a href="" class="checkout">checkout</a>
+                        <a href="/gio-hang" class="view-cart">view cart</a>
+                        <a href="/thanh-toan" class="checkout">checkout</a>
                     </div>
                 </li>
             `);
@@ -447,17 +456,13 @@
             listCart.splice(listCart.indexOf(cart),1);
             localStorage.setItem("listCart", JSON.stringify(listCart));
             $(`#${id}`).remove();
-            // $("tbody[content='"+id+"']").remove();
-            // getCartNumber();
+            $(`tbody[content='${id}']`).remove();
+            getCartNumber();
             if(!listCart.length){
                 $("#listCart").html("<h4>Chưa có sản phẩm nào</h4>");
-                // $("#cartView").html("<h2>Chưa có sản phẩm nào</h2>");
-            }else{
-                $("div.total h5 span").text(formatMoney(calTotal()));
-                // $("div.total h5 span").text(new Intl.NumberFormat('en-US', {style: 'currency', currency: symbol.code}).format(parseFloat(symbol.rate !== 1 ?calTotal()/symbol.rate/1000 : calTotal()/symbol.rate)));
+                $("#cartView").html("<h2>Chưa có sản phẩm nào</h2>");
             }
-        }else{
-            return false;
-        }
+            else $("div.total h5 span").text(formatMoney(calTotal()));
+        }else return;
     }
 </script>

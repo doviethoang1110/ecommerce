@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('layout/css'); %>
+</head>
+<body>
+<%- include('layout/header'); %>
+<%- include('layout/breadcumb');%>
+<section class="section-b-space">
+    <div class="container">
+        <div class="checkout-page">
+            <div class="checkout-form">
+                <form method="post" id="checkout">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-12 col-xs-12">
+                            <div class="checkout-title">
+                                <h3>Billing Details</h3>
+                            </div>
+                            <div class="row check-out">
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Tên người mua</div>
+                                    <input type="hidden" name="f_id" value="" readonly disabled>
+                                    <input type="text" name="f_name" value="" readonly disabled>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Số điện thoại</div>
+                                    <input type="text" name="f_phone" value="" readonly disabled>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Địa chỉ mail</div>
+                                    <input type="text" name="f_email" value="" readonly disabled>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Địa chỉ</div>
+                                    <input type="text" name="f_address" value="" readonly disabled>
+                                </div>
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <input type="checkbox" name="shipping-option" id="account-option"> &ensp;
+                                    <label for="account-option">Địa chỉ người nhận</label>
+                                </div>
+                            </div>
+                            <div class="row check-out" style="margin-top: 60px">
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Tên người nhận</div>
+                                    <input type="text" name="name" id="name" value="" placeholder="Tên người mua">
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Số điện thoại người nhận</div>
+                                    <input type="text" name="phone" id="phone" value="" placeholder="Số điện thoại">
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Địa chỉ mail người nhận</div>
+                                    <input type="email" name="email" id="email" value="" placeholder="Địa chỉ mail">
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Địa chỉ người nhận</div>
+                                    <input type="text" name="address" id="address" value="" placeholder="Địa chỉ">
+                                </div>
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="field-label">Order Note</div>
+                                    <textarea id="note" style="height: 170px" placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-12 col-xs-12">
+                            <div class="checkout-details">
+                                <div class="order-box">
+                                    <div class="title-box">
+                                        <div>Product <span>Total</span></div>
+                                    </div>
+                                    <ul class="qty"  style="height: 100px;overflow-y: auto">
+
+                                    </ul>
+                                    <div class="form-group">
+                                        <label for="coupon" class="sr-only">Mã giảm giá</label>
+                                        <input type="text" class="form-control col-lg-8" id="coupon" placeholder="Mã giảm giá">
+                                    </div>
+                                    <a id="useCoupon" class="btn btn-primary col-lg-4">Sử dụng</a>
+                                    <a class="btn btn-warning col-lg-4" id="listCoupon">Coupon của bạn</a>
+                                    <span id="showCoupon" class="text-success"></span>
+                                    <hr>
+                                    <ul class="sub-total">
+                                        <input type="hidden" value="" id="subtotal"/>
+                                        <li>Subtotal <span class="count"></span></li>
+                                        <li id="shipping">Shipping
+                                            <div class="shipping">
+
+                                            </div>
+                                        </li>
+                                        <div id="append"></div>
+                                    </ul>
+                                    <ul class="total">
+                                        <input type="hidden" value="" id="totalValue"/>
+                                        <li>Total <span class="count" id="count"></span></li>
+                                    </ul>
+                                </div>
+                                <div class="payment-box">
+                                    <div class="upper-box">
+                                        <div class="payment-options">
+                                            <ul>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button type="submit" id="btn-submit" class="btn-solid btn">
+                                            <i id="loading" class="fa fa-spinner fa-spin" hidden></i> Place Order
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!--<div class="modal fade bd-example-modal-lg" id="openCoupons" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-lg">-->
+<!--        <div class="modal-content">-->
+<!--            <table class="table">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th scope="col">Code</th>-->
+<!--                    <th scope="col">Description</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody id="modal-coupon">-->
+
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<%- include('layout/footer'); %>
+<script>
+    let subTotal = calTotal() + 0;
+    const shippings = [{id:1, name:"Basic shipping", fee:0}, {id:2, name:"Fast shipping", fee:20000}, {id:3, name:"Air shippinng", fee:50000}];
+    const payments = [{id:1, name:"Cash on deliver"}, {id:2, name:"Paypal"}];
+    $(document).ready(function () {
+        if(!listCart || !listCart.length){
+            $("div.checkout-page").html(`
+                <div class="jumbotron">
+                        <h2>Bạn chưa mua sản phẩm nào</h2>
+                </div>
+            `);
+        }else{
+            $("ul.qty").html("");
+            listCart.forEach(cart=>{
+                $("ul.qty").append(`
+                    <li>${cart.name} × ${cart.quantity} <span>`+formatMoney(cart.quantity * cart.price)+`</span></li>
+                `);
+            });
+            $("ul.sub-total li .count").text(formatMoney(subTotal));
+            $("#subtotal").val(subTotal);
+            $("#account-option").click(function (event) {
+                var check = document.getElementById("account-option").checked;
+                if(check){
+                    $('input[name="name"]').val($('input[name="f_name"]').val());
+                    $('input[name="email"]').val($('input[name="f_email"]').val());
+                    $('input[name="address"]').val($('input[name="f_address"]').val());
+                    $('input[name="phone"]').val($('input[name="f_phone"]').val());
+                }
+                else {
+                    $('input[name="name"]').val('');
+                    $('input[name="email"]').val('');
+                    $('input[name="address"]').val('');
+                    $('input[name="phone"]').val('');
+                }
+            });
+            shippings.forEach(ship=>{
+                $("div.shipping").append(`
+                    <div class="shopping-option">
+                        <input content="${ship.name}" type="radio" name="delivery" value="`${ship.fee}`" id="ship${ship.id}" class="delivery">
+                        <label for="ship${ship.id}">${ship.name}</label><br>
+                `);
+                if(+ship.fee > 0){
+                    $("div.shipping").append(`
+                        <span>Mô tả : `+formatMoney(ship.fee)+`</span>
+                    `);
+                }else {
+                    $("div.shipping").append(`
+                        <span>Mô tả : Free</span>
+                    `);
+                }
+                $("div.shipping").append(`
+                    </div>
+                `);
+            });
+            payments.forEach(pay=>{
+                $("div.payment-options ul").append(`
+                    <li>
+                        <div class="radio-option">
+                            <input content="${pay.name}" type="radio" value="${pay.id}" name="payment-group" id="payment-${pay.id}">
+                            <label for="payment-${pay.id}">${pay.name}</label>
+                        </div>
+                    </li>
+                `);
+            })
+            $("#ship1").prop("checked",true);   
+            $("#payment-1").prop("checked",true);
+            $("#count").text(formatMoney(subTotal));
+            // $("#totalValue").val();
+            $(document).on('change','input[name="delivery"]',function (event) {
+                subTotal = 0;
+                subTotal = +(currency.rate !== 1 ? subTotal/currency.rate/1000 : subTotal/currency.rate) + +($(this).val());
+                $("#count").text(formatMoney(subTotal));
+                // $("#totalValue").val(subTotal.toFixed(2));
+            })
+        }
+        $("#account-option").click(function (event) {
+            var check = document.getElementById("account-option").checked;
+            if(check){
+                $('input[name="name"]').val($('input[name="f_name"]').val());
+                $('input[name="email"]').val($('input[name="f_email"]').val());
+                $('input[name="address"]').val($('input[name="f_address"]').val());
+                $('input[name="phone"]').val($('input[name="f_phone"]').val());
+            }
+            else {
+                $('input[name="name"]').val('');
+                $('input[name="email"]').val('');
+                $('input[name="address"]').val('');
+                $('input[name="phone"]').val('');
+            }
+        });
+    });
+</script>
+</body>
+</html>

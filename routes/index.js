@@ -9,6 +9,8 @@ router.get('/', HomeController.index)
     .get('/danh-sach-bai-viet', HomeController.blogs)
     .get('/blogs', HomeController.paginate)
     .get('/products', HomeController.getProducts)
-    .get('/products/:slug', HomeController.productDetail);
+    .get('/products/:slug', HomeController.productDetail)
+    .get('/gio-hang', HomeController.carts)
+    .get('/thanh-toan', HomeController.checkout);
 
 module.exports = router;

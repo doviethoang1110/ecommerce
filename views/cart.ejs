@@ -4,161 +4,106 @@
     <%- include('layout/css');%>
 </head>
 <body>
-<%- include('layout/breadcumb');%>
 <%- include('layout/header'); %>
-
+<%- include('layout/breadcumb');%>
 <section class="cart-section section-b-space">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <table class="table cart-table table-responsive-xs">
-                    <thead>
-                    <tr class="table-head">
-                        <th scope="col">image</th>
-                        <th scope="col">product name</th>
-                        <th scope="col">price</th>
-                        <th scope="col">quantity</th>
-                        <th scope="col">action</th>
-                        <th scope="col">total</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <a href="#"><img src="../assets/images/pro3/1.jpg" alt=""></a>
-                        </td>
-                        <td><a href="#">cotton shirt</a>
-                            <div class="mobile-cart-content row">
-                                <div class="col-xs-3">
-                                    <div class="qty-box">
-                                        <div class="input-group">
-                                            <input type="text" name="quantity" class="form-control input-number" value="1">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-3">
-                                    <h2 class="td-color">$63.00</h2>
-                                </div>
-                                <div class="col-xs-3">
-                                    <h2 class="td-color"><a href="#" class="icon"><i class="ti-close"></i></a>
-                                    </h2>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <h2>$63.00</h2>
-                        </td>
-                        <td>
-                            <div class="qty-box">
-                                <div class="input-group">
-                                    <input type="number" name="quantity" class="form-control input-number" value="1">
-                                </div>
-                            </div>
-                        </td>
-                        <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
-                        <td>
-                            <h2 class="td-color">$4539.00</h2>
-                        </td>
-                    </tr>
-                    </tbody>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <a href="#"><img src="../assets/images/pro3/1.jpg" alt=""></a>
-                        </td>
-                        <td><a href="#">cotton shirt</a>
-                            <div class="mobile-cart-content row">
-                                <div class="col-xs-3">
-                                    <div class="qty-box">
-                                        <div class="input-group">
-                                            <input type="number" name="quantity" class="form-control input-number" value="1">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-3">
-                                    <h2 class="td-color">$63.00</h2>
-                                </div>
-                                <div class="col-xs-3">
-                                    <h2 class="td-color"><a href="#" class="icon"><i class="ti-close"></i></a>
-                                    </h2>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <h2>$63.00</h2>
-                        </td>
-                        <td>
-                            <div class="qty-box">
-                                <div class="input-group">
-                                    <input type="number" name="quantity" class="form-control input-number" value="1">
-                                </div>
-                            </div>
-                        </td>
-                        <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
-                        <td>
-                            <h2 class="td-color">$4539.00</h2>
-                        </td>
-                    </tr>
-                    </tbody>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <a href="#"><img src="../assets/images/pro3/1.jpg" alt=""></a>
-                        </td>
-                        <td><a href="#">cotton shirt</a>
-                            <div class="mobile-cart-content row">
-                                <div class="col-xs-3">
-                                    <div class="qty-box">
-                                        <div class="input-group">
-                                            <input type="number" name="quantity" class="form-control input-number" value="1">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-3">
-                                    <h2 class="td-color">$63.00</h2>
-                                </div>
-                                <div class="col-xs-3">
-                                    <h2 class="td-color"><a href="#" class="icon"><i class="ti-close"></i></a>
-                                    </h2>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <h2>$63.00</h2>
-                        </td>
-                        <td>
-                            <div class="qty-box">
-                                <div class="input-group">
-                                    <input type="number" name="quantity" class="form-control input-number" value="1">
-                                </div>
-                            </div>
-                        </td>
-                        <td><a href="#" class="icon"><i class="ti-close"></i></a></td>
-                        <td>
-                            <h2 class="td-color">$4539.00</h2>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <table class="table cart-table table-responsive-md">
-                    <tfoot>
-                    <tr>
-                        <td>total price :</td>
-                        <td>
-                            <h2>$6935.00</h2>
-                        </td>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-        <div class="row cart-buttons">
-            <div class="col-6"><a href="#" class="btn btn-solid">continue shopping</a></div>
-            <div class="col-6"><a href="#" class="btn btn-solid">check out</a></div>
-        </div>
+    <div class="container" id="cartView">
+
     </div>
 </section>
 <%- include('layout/footer'); %>
+<script>
+    $(document).ready(function () {
+        if(!listCart || !listCart.length) $("#cartView").html("<h2>Chưa có sản phẩm nào</h2>");
+        else{
+            $("#cartView").html("");
+            $("#cartView").append(`
+                <div class="row">
+                    <div class="col-sm-12" style="height: 400px;overflow-y: auto">
+                        <table class="table cart-table table-responsive-xs">
+                            <thead>
+                                <tr class="table-head">
+                                    <th scope="col">image</th>
+                                    <th scope="col">product name</th>
+                                    <th scope="col">price</th>
+                                    <th scope="col">quantity</th>
+                                    <th scope="col">total</th>
+                                    <th scope="col">action</th>
+                                </tr>
+                            </thead>
+            `);
+            listCart.forEach(cart=>{
+                $("table.table-responsive-xs").append(`
+                <tbody content="${cart.id}">
+                            <tr>
+                                <td>
+                                    <a href="#"><img src="/uploads/${cart.image}" alt=""></a>
+                                </td>
+                                <td><a href="#">${cart.name}</a><br><span>${cart.id}</span><br><span>Variants :${cart.values.join(",")}</span></td>
+                                <td>
+                                    <h2>${formatMoney(cart.price)}</h2>
+                                </td>
+                                <td>
+                                    <div class="qty-box">
+                                        <div class="input-group">
+                                            <input type="number" name="quantity" class="form-control input-number" content="${cart.id}" value="${cart.quantity}">
+                                        </div>
+                                        <span class="text-danger" content="${cart.id}"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h2 class="td-color" content="${cart.id}">${formatMoney(cart.quantity * cart.price)}</h2>
+                                </td>
+                                <td><a href="#" content="${cart.id}" class="icon"><i class="ti-close"></i></a></td>
+                            </tr>
+                        </tbody>
+                `);
+            });
+            $("#cartView").append(`
+                    <table class="table cart-table table-responsive-md">
+                            <tfoot>
+                                <tr>
+                                    <td>total price :</td>
+                                    <td>
+                                        <h2 id="total">${formatMoney(calTotal())}</h2>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                    </table>
+                </div>
+            </div>
+            `);
+            $("#cartView").append(`
+                <div class="row cart-buttons">
+                    <div class="col-6"><a href="/san-pham" class="btn btn-solid">continue shopping</a></div>
+                    <div class="col-6"><a href="/thanh-toan" class="btn btn-solid">check out</a></div>
+                </div>
+            `);
+        }
+    });
+    $(document).on("change","input[name='quantity']",function (event) {
+        event.preventDefault();
+        let cart = listCart.find(c => c.id === $(this).attr("content"));
+        if(+$(this).val() < 1){
+            $("span[content='"+cart.id+"'").text("Tối thiểu 1");
+            return;
+        }else {
+            $("span[content='"+cart.id+"'").text("");
+            if(+$(this).val() >= cart.max) cart.quantity = cart.max;
+            else cart.quantity = +$(this).val();
+            $(this).val(cart.quantity)
+            $(`h2[content='${cart.id}']`).text(formatMoney(cart.quantity * cart.price));
+            getCartNumber();
+            $(`li#${cart.id} .media .media-body h4 span`).text(`${cart.quantity} x ${formatMoney(cart.price)}`);
+            $("#total").text(formatMoney(calTotal()));
+            localStorage.setItem("listCart", JSON.stringify(listCart));
+        }
+    });
 
+    $(document).on('click','a.icon',function (event) {
+        event.preventDefault();
+        removeCart($(this).attr("content"));
+    });
+</script>
 </body>
 </html>
