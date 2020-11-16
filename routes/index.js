@@ -1,6 +1,7 @@
 const express = require('express');
 const HomeController = require('../controllers/web/HomeController')
 const router = express.Router();
+const {isAuthenticated,isUnAuthenticated} = require('../services/PassportService');
 
 /* GET home page. */
 router.get('/', HomeController.index)
@@ -11,6 +12,12 @@ router.get('/', HomeController.index)
     .get('/products', HomeController.getProducts)
     .get('/products/:slug', HomeController.productDetail)
     .get('/gio-hang', HomeController.carts)
-    .get('/thanh-toan', HomeController.checkout);
+    .get('/thanh-toan',isAuthenticated, HomeController.checkout)
+    .get('/trang-ca-nhan',isAuthenticated, HomeController.dashboard)
+    .get('/dang-ky',isUnAuthenticated, HomeController.register)
+    .post('/dang-ky', HomeController.postRegister)
+    .get('/dang-nhap',isUnAuthenticated, HomeController.login)
+    .post('/dang-nhap', HomeController.postLogin)
+    .delete('/dang-xuat', HomeController.logout);
 
 module.exports = router;

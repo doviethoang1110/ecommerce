@@ -4,7 +4,8 @@ module.exports = {
         port:process.env.PORT || 5000,
         origin:process.env.ORIGIN,
         methods: process.env.METHODS,
-        headers: process.env.HEADERS
+        headers: process.env.HEADERS,
+        secretKey: process.env.SECRETKEY
     },
     database: {
         port: process.env.DBPORT,

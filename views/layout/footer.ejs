@@ -350,10 +350,10 @@
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
-            timer: 2000,
+            timer: 1000,
             timerProgressBar: true
         })
-        Toast.fire({icon, title})
+        return Toast.fire({icon, title})
     }
 
     const listCart = JSON.parse(localStorage.getItem("listCart")) ? JSON.parse(localStorage.getItem("listCart")) : [];
@@ -382,6 +382,20 @@
 
         if(listCart.length) addTopCart();
         else $("#listCart").html("<li><h4>Chưa có sản phẩm nào</h4></li>");
+
+        $("#logout").click(function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: url+"/dang-xuat",
+                method: "DELETE",
+                success:function () {
+                    window.location.href = "http://localhost:4200"
+                },
+                error:function (error) {
+                    $("#error_message").text(error.responseJSON)
+                }
+            })
+        })
     });
 
     function openSearch() {

@@ -1,11 +1,14 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const {singleton} = require('./helpers');
 const moment = require('moment');
 const session = require('express-session');
+const cookieParser = require("cookie-parser");
+const passport = require('passport');
+const {initialize} = require('./services/PassportService');
+
 // Cors
 const cors = require("cors");
 const { application } = require('./config/configuration');
@@ -30,19 +33,24 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+//session
+app.use(session({
+  secret: application.secretKey,
+  resave: true,
+  saveUninitialized: false,
+  cookie: { maxAge: 1000 * 60 * 60 * 24 }
+}));
+
+initialize();
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
-
-// let currencies;
-// let categories;
-app.use(session({secret: 'my secret key',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }}))
 
 //singleton variable
 let categories;
@@ -57,7 +65,8 @@ app.use(async function (req,res,next) {
   }
   res.locals = {
     categories,
-    currencies
+    currencies,
+    customer: req.user
   }
   next()
 });

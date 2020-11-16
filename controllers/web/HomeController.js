@@ -1,4 +1,6 @@
-const {BrandService,BlogService,ProductService} = require('../../container')
+const {BrandService,BlogService,ProductService,CustomerService} = require('../../container');
+const passport = require('passport');
+
 module.exports.index = async function (req, res) {
     res.render('index' ,{
         title:'Multikart',
@@ -51,6 +53,62 @@ module.exports.carts = async function (req, res) {
 
 module.exports.checkout = async function (req, res) {
     res.render('checkout', {
-        title: 'Thanh toán'
+        title: 'Thanh toán',
+        name:req.user.name
+    })
+}
+
+module.exports.register = async function (req, res) {
+    res.render('register', {
+        title: 'Đăng ký'
+    })
+}
+
+module.exports.postRegister = async function (req, res, next) {
+    try{
+        const customer = await CustomerService.store(req.body);
+        res.api(customer.status,customer.body);
+    }catch(err){
+        console.log(err)
+        next(err);
+    }
+}
+
+module.exports.login = async function (req, res) {
+    res.render('login', {
+        title: 'Đăng nhập'
+    })
+}
+
+module.exports.postLogin = (req, res, next) => {
+    passport.authenticate('local',function(error, customer, info) {
+        if(error) {
+            res.api(500, error);
+            return;
+        }
+        if(!customer) {
+            res.api(401, info.message);
+            return;
+        }
+        if(req.body.remember) req.session.cookie.maxAge = 10 * 24 * 60 * 60 * 1000;
+        else req.session.cookie.expires = false;
+        req.logIn(customer, function (err) {
+            if(err) res.api(500, err);
+            else res.api(200, 'Đăng nhập thành công');
+        })
+    })(req, res, next);
+}
+
+module.exports.logout = (req, res, next) => {
+    if(req.isAuthenticated()) {
+        req.logout();
+        res.api(200, 'Đăng xuất thành công');
+    }
+    else res.api(400, 'Đăng xuất thất bại');;
+}
+
+module.exports.dashboard = (req, res, next) => {
+    res.render('dashboard', {
+        title: 'Trang cá nhân'
     })
 }
