@@ -12,5 +12,11 @@ module.exports = {
         username: process.env.USERNAME,
         password: process.env.PASSWORD,
         dbname: process.env.DB_NAME,
+    },
+    mailer: {
+        host: process.env.MAIL_HOST,
+        port: process.env.MAIL_PORT,
+        name: process.env.MAIL_NAME,
+        password: process.env.MAIL_PASSWORD
     }
 }

@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     expireDate: DataTypes.DATE
   }, {
     sequelize,
+    hooks: false,
+    timestamps: false,
     modelName: 'Token',
   });
   return Token;

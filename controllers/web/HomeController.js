@@ -74,6 +74,19 @@ module.exports.postRegister = async function (req, res, next) {
     }
 }
 
+module.exports.verifyEmail = async function(req, res, next) {
+    try {
+        const result = await CustomerService.verifyEmail(req.query.token);
+        res.render('verify-token', {
+            title: 'Xác thực tài khoản',
+            result
+        });
+    }catch (error) {
+        console.log(error)
+        next(error);
+    }
+}
+
 module.exports.login = async function (req, res) {
     res.render('login', {
         title: 'Đăng nhập'

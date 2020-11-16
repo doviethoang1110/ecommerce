@@ -64,4 +64,11 @@ db.products.hasMany(db.skus, {
   as:'skus'
 })
 
+db.customers.hasOne(db.tokens)
+
+db.tokens.belongsTo(db.customers, {
+  foreignKey: 'customerId',
+  as: 'customer'
+});
+
 module.exports = db;
