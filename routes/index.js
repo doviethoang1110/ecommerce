@@ -16,7 +16,7 @@ router.get('/', HomeController.index)
     .get('/trang-ca-nhan',isAuthenticated, HomeController.dashboard)
     .get('/dang-ky',isUnAuthenticated, HomeController.register)
     .post('/dang-ky', HomeController.postRegister)
-    .get('/verify-email', HomeController.verifyEmail)
+    .get('/verify-email',isUnAuthenticated, HomeController.verifyEmail)
     .get('/dang-nhap',isUnAuthenticated, HomeController.login)
     .post('/dang-nhap', HomeController.postLogin)
     .delete('/dang-xuat', HomeController.logout);
