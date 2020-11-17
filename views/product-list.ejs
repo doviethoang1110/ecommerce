@@ -284,6 +284,24 @@
             error: function (error) {
                 console.log(error)
             }
+        });
+        $(document).on('click','.addWishList',function (event) {
+            event.preventDefault();
+            const id = JSON.parse('<%-JSON.stringify(customer.id)%>');
+            if(!id) window.location.href = url+"/dang-nhap";
+            else{
+                $.ajax({
+                    url:url+"/wishLists",
+                    method:"POST",
+                    data: {customerId:id,productId:$(this).attr("content")},
+                    success:function (response) {
+                        toast('success',response);
+                    },
+                    error:function (error) {
+                        toast('error',error.responseJSON);
+                    }
+                })
+            }
         })
     })
 </script>

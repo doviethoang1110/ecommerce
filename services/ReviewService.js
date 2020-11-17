@@ -1,5 +1,4 @@
 const { ReviewRepository } = require('../repository');
-const sequelize = require('sequelize');
 
 class ReviewService {
     constructor(container) {

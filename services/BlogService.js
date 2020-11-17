@@ -7,7 +7,7 @@ class BlogService {
     }
 
     async getAllBlogs() {
-        return this.blogRepository.find({attributes:['id','title','image','status']});;
+        return this.blogRepository.find({attributes:['id','title','image','status']});
     }
 
     getBlogsForIndex() {

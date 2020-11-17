@@ -1,4 +1,4 @@
-const {BrandService,BlogService,ProductService,CustomerService,ReviewService} = require('../../container');
+const {BrandService,BlogService,ProductService,CustomerService,ReviewService,WishListService} = require('../../container');
 const passport = require('passport');
 
 module.exports.index = async function (req, res) {
@@ -138,6 +138,37 @@ module.exports.reviews = async (req, res, next) => {
 module.exports.postReview = async (req, res, next) => {
     try {
         const result = await ReviewService.store(req.body);
+        res.api(result.status, result.body);
+    }catch (error) {
+        next(error)
+    }
+}
+
+module.exports.wishLists = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        const result = await WishListService.getAllWishList(id);
+        res.api(200, result);
+    }catch (error) {
+        next(error)
+    }
+}
+
+module.exports.postWishList = async (req, res, next) => {
+    try {
+        const result = await WishListService.store(req.body);
+        res.api(result.status, result.body);
+    }catch (error) {
+        next(error)
+    }
+}
+
+module.exports.removeWishList = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        const result = await WishListService.remove(id,true);
         res.api(result.status, result.body);
     }catch (error) {
         next(error)

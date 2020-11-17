@@ -8,5 +8,6 @@ module.exports = {
     CurrencyRepository: require('./CurrencyRepository'),
     CustomerRepository: require('./CustomerRepository'),
     TokenRepository: require('./TokenRepository'),
-    ReviewRepository: require('./ReviewRepository')
+    ReviewRepository: require('./ReviewRepository'),
+    WishListRepository: require('./WishListRepository')
 }
