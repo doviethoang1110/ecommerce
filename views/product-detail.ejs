@@ -231,6 +231,11 @@
                                     <div class="tab-pane fade show active" id="top-home" role="tabpanel" aria-labelledby="top-home-tab">
                                         <%-product.description%>
                                     </div>
+                                    <div class="tab-pane fade" id="top-profile" role="tabpanel" aria-labelledby="profile-top-tab">
+                                        <div class="col-md-12 review-box">
+
+                                        </div>
+                                    </div>
                                     <div class="tab-pane fade" id="top-review" role="tabpanel"
                                          aria-labelledby="review-top-tab">
                                         <form class="theme-form" id="form-review" method="post">
@@ -307,7 +312,41 @@
         addTopCart();
     }
 
+    function getReviews(){
+        $.ajax({
+            url:url+"/reviews/"+JSON.parse('<%- JSON.stringify(product.id)%>'),
+            method:"GET",
+            success:function (response) {
+                $("div.review-box").html("");
+                response.forEach(r=>{
+                    $("div.review-box").append(`
+                        <div class="col-md-12">
+                            <div class="post-author">
+                                <p><span>${r.name} -</span> `+new Intl.DateTimeFormat(['ban', 'id']).format(r.createdAt)+`</p>
+                            </div>
+                                <div id="review${r.id}" class="ratings" style="padding-left: 20px">
+                                </div>
+                   `);
+                    $(`div#review${r.id}`).html("");
+                    for (let i = 1; i <= 5; i++) {
+                        $("div#review"+r.id).append(`
+                            <span class="fa fa-star" style="color: ${i<=r.rating ? 'orange' : ''}"></span>
+                        `);
+                    }
+                    $("div.review-box").append(`
+                            <p>Nội dung : ${r.content}</p>
+                        </div>
+                   `);
+                });
+            },
+            error:function (error) {
+                console.log(error);
+            }
+        });
+    }
+
     $(document).ready(function () {
+        getReviews();
         const param = [];
         let price;
         $('#addCart').attr('disabled','disabled');

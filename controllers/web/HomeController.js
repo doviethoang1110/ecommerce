@@ -126,6 +126,15 @@ module.exports.dashboard = (req, res, next) => {
     })
 }
 
+module.exports.reviews = async (req, res, next) => {
+    try {
+        const result = await ReviewService.getProductReviews(req.params.productId);
+        res.api(200, result);
+    }catch (error) {
+        next(error)
+    }
+}
+
 module.exports.postReview = async (req, res, next) => {
     try {
         const result = await ReviewService.store(req.body);

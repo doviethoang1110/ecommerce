@@ -3,5 +3,6 @@ module.exports = {
     BrandController: require('./BrandController'),
     ProductController: require('./ProductController'),
     BlogController: require('./BlogController'),
-    CurrencyController: require('./CurrencyController')
+    CurrencyController: require('./CurrencyController'),
+    ReviewController: require('./ReviewController')
 }
