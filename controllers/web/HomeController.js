@@ -1,4 +1,4 @@
-const {BrandService,BlogService,ProductService,CustomerService} = require('../../container');
+const {BrandService,BlogService,ProductService,CustomerService,ReviewService} = require('../../container');
 const passport = require('passport');
 
 module.exports.index = async function (req, res) {
@@ -124,4 +124,13 @@ module.exports.dashboard = (req, res, next) => {
     res.render('dashboard', {
         title: 'Trang cá nhân'
     })
+}
+
+module.exports.postReview = async (req, res, next) => {
+    try {
+        const result = await ReviewService.store(req.body);
+        res.api(result.status, result.body);
+    }catch (error) {
+        next(error)
+    }
 }

@@ -19,20 +19,20 @@
                             <div class="row check-out">
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <div class="field-label">Tên người mua</div>
-                                    <input type="hidden" name="f_id" value="" readonly disabled>
-                                    <input type="text" name="f_name" value="" readonly disabled>
+                                    <input type="hidden" name="f_id" value="<%=customer.id%>" readonly disabled>
+                                    <input type="text" name="f_name" value="<%=customer.name%>" readonly disabled>
                                 </div>
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <div class="field-label">Số điện thoại</div>
-                                    <input type="text" name="f_phone" value="" readonly disabled>
+                                    <input type="text" name="f_phone" value="<%=customer.phone%>" readonly disabled>
                                 </div>
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <div class="field-label">Địa chỉ mail</div>
-                                    <input type="text" name="f_email" value="" readonly disabled>
+                                    <input type="text" name="f_email" value="<%=customer.email%>" readonly disabled>
                                 </div>
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <div class="field-label">Địa chỉ</div>
-                                    <input type="text" name="f_address" value="" readonly disabled>
+                                    <input type="text" name="f_address" value="<%=customer.address%>" readonly disabled>
                                 </div>
                                 <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <input type="checkbox" name="shipping-option" id="account-option"> &ensp;
@@ -103,7 +103,7 @@
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <button type="submit" id="btn-submit" class="btn-solid btn">
+                                        <button type="submit" id="placeOrder" class="btn-solid btn">
                                             <i id="loading" class="fa fa-spinner fa-spin" hidden></i> Place Order
                                         </button>
                                     </div>
@@ -135,7 +135,7 @@
 <!--</div>-->
 <%- include('layout/footer'); %>
 <script>
-    let subTotal = calTotal() + 0;
+    let subTotal = calTotal();
     const shippings = [{id:1, name:"Basic shipping", fee:0}, {id:2, name:"Fast shipping", fee:20000}, {id:3, name:"Air shippinng", fee:50000}];
     const payments = [{id:1, name:"Cash on deliver"}, {id:2, name:"Paypal"}];
     $(document).ready(function () {
@@ -172,7 +172,7 @@
             shippings.forEach(ship=>{
                 $("div.shipping").append(`
                     <div class="shopping-option">
-                        <input content="${ship.name}" type="radio" name="delivery" value="`${ship.fee}`" id="ship${ship.id}" class="delivery">
+                        <input content="${ship.name}" type="radio" name="delivery" value="${ship.fee}" id="ship${ship.id}" class="delivery">
                         <label for="ship${ship.id}">${ship.name}</label><br>
                 `);
                 if(+ship.fee > 0){
@@ -201,12 +201,11 @@
             $("#ship1").prop("checked",true);   
             $("#payment-1").prop("checked",true);
             $("#count").text(formatMoney(subTotal));
-            // $("#totalValue").val();
             $(document).on('change','input[name="delivery"]',function (event) {
-                subTotal = 0;
-                subTotal = +(currency.rate !== 1 ? subTotal/currency.rate/1000 : subTotal/currency.rate) + +($(this).val());
-                $("#count").text(formatMoney(subTotal));
-                // $("#totalValue").val(subTotal.toFixed(2));
+                let total = subTotal;
+                total = +(currency.rate !== 1 ? total/currency.rate/1000 : total/currency.rate) + +(currency.rate !== 1
+                    ? $(this).val()/currency.rate/1000 : $(this).val()/currency.rate);
+                $("#count").text(new Intl.NumberFormat('en-US',{ style: 'currency', currency: currency.code }).format(Math.round(total)));
             })
         }
         $("#account-option").click(function (event) {
@@ -224,6 +223,10 @@
                 $('input[name="phone"]').val('');
             }
         });
+        $("#placeOrder").click(function (event) {
+            event.preventDefault();
+            console.log(listCart)
+        })
     });
 </script>
 </body>

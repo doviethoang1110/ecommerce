@@ -35,6 +35,7 @@ db.blogs = require("../models/blog")(sequelize, DataTypes);
 db.currencies = require('../models/currency')(sequelize, DataTypes);
 db.customers = require('../models/customer')(sequelize, DataTypes);
 db.tokens = require('../models/token')(sequelize, DataTypes);
+db.reviews = require('../models/review')(sequelize, DataTypes);
 // relationships
 db.categories.belongsToMany(db.products,{
   through: "Category_Product",
@@ -70,5 +71,10 @@ db.tokens.belongsTo(db.customers, {
   foreignKey: 'customerId',
   as: 'customer'
 });
+
+db.products.hasMany(db.reviews, {
+  foreignKey: 'productId',
+  as: 'reviews'
+})
 
 module.exports = db;

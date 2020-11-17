@@ -373,6 +373,7 @@
             localStorage.setItem("currency",JSON.stringify(currency));
             $('.currencies').css("background-color","");
             $(this).css("background-color","aqua");
+            setTimeout(() => window.location.reload(), 0);
         });
 
         $(document).on('click',"div.close-circle a",function (event) {
@@ -411,16 +412,16 @@
     }
 
     function formatMoney(money) {
-        let cash = currency.rate !== 1 ? money/currency.rate/1000 : money/currency.rate
+        let cash = currency.rate !== 1 ? money/currency.rate/1000 : money/currency.rate;
         return new Intl.NumberFormat('en-US',{ style: 'currency', currency: currency.code }).format(Math.round(cash));
     }
 
     function calTotal(){
         let total = 0;
         listCart.forEach(cart=>{
-            total += +(cart.price*cart.quantity);
+            total += cart.price*cart.quantity
         });
-        return total;
+        return Math.round(total);
     }
 
     function getCartNumber() {

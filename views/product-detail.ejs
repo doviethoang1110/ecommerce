@@ -4,6 +4,11 @@
     <%- include('layout/css');%>
 </head>
 <body>
+<style>
+    label.error{
+        color: red!important;
+    }
+</style>
 <%- include('layout/header'); %>
 <%- include('layout/breadcumb'); %>
 <section class="section-b-space">
@@ -190,10 +195,7 @@
                                     <span class="text-danger" id="message"></span>
                                     <div class="border-product">
                                         <h6 class="product-title">product details</h6>
-                                        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem
-                                            accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab
-                                            illo inventore veritatis et quasi architecto beatae vitae dicta sunt,
-                                            explicabo. Nemo enim ipsam voluptatem,</p>
+                                        <%-product.description.slice(0,100)+"..."%>
                                     </div>
                                     <div class="border-product">
                                         <h6 class="product-title">share it</h6>
@@ -210,13 +212,6 @@
                                             </form>
                                         </div>
                                     </div>
-                                    <div class="border-product">
-                                        <h6 class="product-title">Time Reminder</h6>
-                                        <div class="timer">
-                                            <p id="demo"><span>25 <span class="padding-l">:</span> <span class="timer-cal">Days</span> </span><span>22 <span class="padding-l">:</span> <span class="timer-cal">Hrs</span> </span><span>13 <span class="padding-l">:</span> <span class="timer-cal">Min</span> </span><span>57 <span class="timer-cal">Sec</span></span>
-                                            </p>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -228,108 +223,51 @@
                                     <li class="nav-item"><a class="nav-link active" id="top-home-tab" data-toggle="tab" href="#top-home" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>Description</a>
                                         <div class="material-border"></div>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab" href="#top-profile" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Details</a>
-                                        <div class="material-border"></div>
-                                    </li>
-                                    <li class="nav-item"><a class="nav-link" id="contact-top-tab" data-toggle="tab" href="#top-contact" role="tab" aria-selected="false"><i class="icofont icofont-contacts"></i>Video</a>
-                                        <div class="material-border"></div>
-                                    </li>
                                     <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab" href="#top-review" role="tab" aria-selected="false"><i class="icofont icofont-contacts"></i>Write Review</a>
                                         <div class="material-border"></div>
                                     </li>
                                 </ul>
                                 <div class="tab-content nav-material" id="top-tabContent">
                                     <div class="tab-pane fade show active" id="top-home" role="tabpanel" aria-labelledby="top-home-tab">
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting
-                                            industry. Lorem Ipsum has been the industry's standard dummy text ever
-                                            since the 1500s, when an unknown printer took a galley of type and
-                                            scrambled it to make a type specimen book. It has survived not only five
-                                            centuries, but also the leap into electronic typesetting, remaining
-                                            essentially unchanged. It was popularised in the 1960s with the release
-                                            of Letraset sheets containing Lorem Ipsum passages, and more recently
-                                            with desktop publishing software like Aldus PageMaker including versions
-                                            of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and
-                                            typesetting industry. Lorem Ipsum has been the industry's standard dummy
-                                            text ever since the 1500s, when an unknown printer took a galley of type
-                                            and scrambled it to make a type specimen book. It has survived not only
-                                            five centuries, but also the leap into electronic typesetting, remaining
-                                            essentially unchanged. It was popularised in the 1960s with the release
-                                            of Letraset sheets containing Lorem Ipsum passages, and more recently
-                                            with desktop publishing software like Aldus PageMaker including versions
-                                            of Lorem Ipsum.</p>
+                                        <%-product.description%>
                                     </div>
-                                    <div class="tab-pane fade" id="top-profile" role="tabpanel" aria-labelledby="profile-top-tab">
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting
-                                            industry. Lorem Ipsum has been the industry's standard dummy text ever
-                                            since the 1500s, when an unknown printer took a galley of type and
-                                            scrambled it to make a type specimen book. It has survived not only five
-                                            centuries, but also the leap into electronic typesetting, remaining
-                                            essentially unchanged. It was popularised in the 1960s with the release
-                                            of Letraset sheets containing Lorem Ipsum passages, and more recently
-                                            with desktop publishing software like Aldus PageMaker including versions
-                                            of Lorem Ipsum.</p>
-                                        <div class="single-product-tables">
-                                            <table>
-                                                <tbody>
-                                                <tr>
-                                                    <td>Febric</td>
-                                                    <td>Chiffon</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Color</td>
-                                                    <td>Red</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Material</td>
-                                                    <td>Crepe printed</td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <table>
-                                                <tbody>
-                                                <tr>
-                                                    <td>Length</td>
-                                                    <td>50 Inches</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Size</td>
-                                                    <td>S, M, L .XXL</td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="top-contact" role="tabpanel" aria-labelledby="contact-top-tab">
-                                        <div class="mt-3 text-center">
-                                            <iframe width="560" height="315" src="https://www.youtube.com/embed/BUWzX78Ye_8" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
-                                        <form class="theme-form">
+                                    <div class="tab-pane fade" id="top-review" role="tabpanel"
+                                         aria-labelledby="review-top-tab">
+                                        <form class="theme-form" id="form-review" method="post">
                                             <div class="form-row">
                                                 <div class="col-md-12">
                                                     <div class="media">
                                                         <label>Rating</label>
                                                         <div class="media-body ml-3">
-                                                            <div class="rating three-star"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i></div>
+                                                            <div class="rating three-star">
+                                                                <span>Bad</span>
+                                                                <% for(let i = 1; i <= 5; i++) { %>
+                                                                    <input type="radio" name="rating" value="<%= i%>">
+                                                                <% } %>
+                                                                <span>Good</span>
+                                                            </div>
+                                                            <span class="text-danger errMsg" id="err_rating"></span>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="name">Name</label>
-                                                    <input type="text" class="form-control" id="name" placeholder="Enter Your name" required="">
+                                                    <label for="review-name">Name</label>
+                                                    <input type="text" name="name" class="form-control" id="review-name"
+                                                           placeholder="Enter Your name">
+                                                    <span class="text-danger errMsg" id="err_name"></span>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="email">Email</label>
-                                                    <input type="text" class="form-control" id="email" placeholder="Email" required="">
+                                                    <label for="review-email">Email</label>
+                                                    <input type="email" name="email" class="form-control" id="review-email"
+                                                           placeholder="Email">
+                                                    <span class="text-danger errMsg" id="err_email"></span>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="review">Review Title</label>
-                                                    <input type="text" class="form-control" id="review" placeholder="Enter your Review Subjects" required="">
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <label for="review">Review Title</label>
-                                                    <textarea class="form-control" placeholder="Wrire Your Testimonial Here" id="exampleFormControlTextarea1" rows="6"></textarea>
+                                                    <textarea class="form-control" name="content"
+                                                              placeholder="Wrire Your Testimonial Here"
+                                                              id="review" rows="6"></textarea>
+                                                    <span class="text-danger errMsg" id="err_content"></span>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <button class="btn btn-solid" type="submit">Submit YOur
@@ -349,6 +287,7 @@
 </section>
 
 <%- include('layout/footer'); %>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" type="text/javascript"></script>
 <script>
     const {skus,discount,image} = JSON.parse('<%- JSON.stringify(product)%>');
     const length = +'<%=product.options.length%>';
@@ -422,7 +361,63 @@
             };
             addCart(product,sku.stock);
             getCartNumber()
-        })
+        });
+
+        $("#form-review").on('submit',function (event) {
+            event.preventDefault();
+            $("#form-review").validate({
+                rules: {
+                    "name": {
+                        required: true,
+                        maxlength: 15
+                    },
+                    "email": {
+                        required: true,
+                        maxlength: 40,
+                        email:true
+                    },
+                    "content": {
+                        required: true,
+                    }
+                },
+                messages:{
+                    "name":{
+                        required:"Tên không được rỗng",
+                        maxlength:"Tối đa 15 ký tự"
+                    },
+                    "email":{
+                        required:"Email không được rỗng",
+                        maxlength:"Tối đa 40 ký tự",
+                        email:"Email không đúng định dạng"
+                    },
+                    "content":{
+                        required:"Nội dung không được rỗng"
+                    }
+                },
+                submitHandler: function () {
+                    const data = {
+                        productId: JSON.parse('<%- JSON.stringify(product.id)%>'),
+                        rating:$("input[name='rating']:checked").val() || null,
+                        name:$("input[name='name']").val(),
+                        email:$("input[name='email']").val(),
+                        content:$("textarea[name='content']").val(),
+                    };
+                    $.ajax({
+                        url:url+"/reviews",
+                        method:"POST",
+                        data,
+                        success:function (response) {
+                            alert(response.message);
+                            $(".errMsg").text("");
+                            document.getElementById("form-review").reset();
+                        },
+                        error:function (error) {
+                            for(e in error.responseJSON) $(`#err_${e}`).text(error.responseJSON[e]);
+                        }
+                    })
+                }
+            })
+        });
     })
 </script>
 </body>

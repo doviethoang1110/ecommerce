@@ -6,4 +6,5 @@ module.exports = {
     BlogService: Container.get(require('../services/BlogService')),
     CurrencyService: Container.get(require('../services/CurrencyService')),
     CustomerService: Container.get(require('../services/CustomerService')),
+    ReviewService: Container.get(require('../services/ReviewService'))
 }
