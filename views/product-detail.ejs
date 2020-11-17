@@ -223,6 +223,11 @@
                                     <li class="nav-item"><a class="nav-link active" id="top-home-tab" data-toggle="tab" href="#top-home" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>Description</a>
                                         <div class="material-border"></div>
                                     </li>
+                                    <li class="nav-item"><a class="nav-link" id="profile-top-tab" data-toggle="tab"
+                                                            href="#top-profile" role="tab" aria-selected="false"><i
+                                                    class="icofont icofont-man-in-glasses"></i>Details</a>
+                                        <div class="material-border"></div>
+                                    </li>
                                     <li class="nav-item"><a class="nav-link" id="review-top-tab" data-toggle="tab" href="#top-review" role="tab" aria-selected="false"><i class="icofont icofont-contacts"></i>Write Review</a>
                                         <div class="material-border"></div>
                                     </li>
@@ -317,23 +322,23 @@
             url:url+"/reviews/"+JSON.parse('<%- JSON.stringify(product.id)%>'),
             method:"GET",
             success:function (response) {
-                $("div.review-box").html("");
+                $(".review-box").html("");
                 response.forEach(r=>{
-                    $("div.review-box").append(`
+                    $(".review-box").append(`
                         <div class="col-md-12">
                             <div class="post-author">
-                                <p><span>${r.name} -</span> `+new Intl.DateTimeFormat(['ban', 'id']).format(r.createdAt)+`</p>
+                                <p><span>${r.name} -</span> `+formatDate(new Date(r.createdAt))+`</p>
                             </div>
                                 <div id="review${r.id}" class="ratings" style="padding-left: 20px">
                                 </div>
                    `);
-                    $(`div#review${r.id}`).html("");
+                    $(`#review${r.id}`).html("");
                     for (let i = 1; i <= 5; i++) {
                         $("div#review"+r.id).append(`
                             <span class="fa fa-star" style="color: ${i<=r.rating ? 'orange' : ''}"></span>
                         `);
                     }
-                    $("div.review-box").append(`
+                    $(".review-box").append(`
                             <p>Nội dung : ${r.content}</p>
                         </div>
                    `);
