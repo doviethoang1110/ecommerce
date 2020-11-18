@@ -64,7 +64,7 @@ class Repository {
         try {
             let data = await this.collection.bulkCreate(array);
             return data;
-        }catch (e) {
+        }catch (err) {
             let errors = validate(err.errors);
             if(errors) throw errors;
         }

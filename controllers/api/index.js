@@ -4,5 +4,7 @@ module.exports = {
     ProductController: require('./ProductController'),
     BlogController: require('./BlogController'),
     CurrencyController: require('./CurrencyController'),
-    ReviewController: require('./ReviewController')
+    ReviewController: require('./ReviewController'),
+    RoleController: require('./RoleController'),
+    PermissionController: require('./PermissionController')
 }

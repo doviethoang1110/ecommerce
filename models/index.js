@@ -37,6 +37,9 @@ db.customers = require('../models/customer')(sequelize, DataTypes);
 db.tokens = require('../models/token')(sequelize, DataTypes);
 db.reviews = require('../models/review')(sequelize, DataTypes);
 db.wishlists = require('../models/wishlist')(sequelize, DataTypes);
+db.permissions = require('../models/permission')(sequelize, DataTypes);
+db.roles = require('../models/role')(sequelize, DataTypes);
+db.rolePermissions = require('../models/rolepermission')(sequelize, DataTypes);
 // relationships
 db.categories.belongsToMany(db.products,{
   through: "Category_Product",
@@ -77,5 +80,13 @@ db.products.hasMany(db.reviews, {
   foreignKey: 'productId',
   as: 'reviews'
 });
+
+db.permissions.belongsToMany(db.roles, {
+  through: db.rolePermissions
+});
+
+db.roles.belongsToMany(db.permissions, {
+  through: db.rolePermissions
+})
 
 module.exports = db;

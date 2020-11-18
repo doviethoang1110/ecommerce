@@ -9,5 +9,7 @@ module.exports = {
     CustomerRepository: require('./CustomerRepository'),
     TokenRepository: require('./TokenRepository'),
     ReviewRepository: require('./ReviewRepository'),
-    WishListRepository: require('./WishListRepository')
+    WishListRepository: require('./WishListRepository'),
+    PermissionRepository: require('./PermissionRepository'),
+    RoleRepository: require('./RoleRepository')
 }

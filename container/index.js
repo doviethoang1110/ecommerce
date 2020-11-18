@@ -7,5 +7,7 @@ module.exports = {
     CurrencyService: Container.get(require('../services/CurrencyService')),
     CustomerService: Container.get(require('../services/CustomerService')),
     ReviewService: Container.get(require('../services/ReviewService')),
-    WishListService: Container.get(require('../services/WishListService'))
+    WishListService: Container.get(require('../services/WishListService')),
+    RoleService: Container.get(require('../services/RoleService')),
+    PermissionService: Container.get(require('../services/PermissionService'))
 }
