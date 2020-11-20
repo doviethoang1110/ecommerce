@@ -12,6 +12,12 @@ class PermissionService {
         })
     }
 
+    async getPermissionSelect() {
+        return await this.permissionRepository.find({
+            attributes: ['id','displayName']
+        })
+    }
+
     async findById(id) {
         return await this.permissionRepository.findOne(id,{attributes:['id','name','displayName']});
     }
