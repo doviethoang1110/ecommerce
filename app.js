@@ -29,6 +29,7 @@ const currency = require('./routes/api/currency');
 const review = require('./routes/api/review');
 const permission = require('./routes/api/permission');
 const role = require('./routes/api/role');
+const user = require('./routes/api/user');
 
 
 const app = express();
@@ -98,6 +99,7 @@ app.use('/api/v1/currencies', currency);
 app.use('/api/v1/reviews', review);
 app.use('/api/v1/permissions', permission);
 app.use('/api/v1/roles', role);
+app.use('/api/v1/users', user);
 
 // overrideMethods
 app.response.api = function (statusCode, body) {

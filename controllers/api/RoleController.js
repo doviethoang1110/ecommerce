@@ -5,6 +5,8 @@ module.exports.index = async (req, res) => {
     res.api(200, list);
 }
 
+module.exports.select = async (req, res) => res.api(200, await RoleService.getRoleSelect())
+
 module.exports.edit = async (req, res, next) => {
     try {
         let id = req.params.id;

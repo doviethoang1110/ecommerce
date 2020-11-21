@@ -10,6 +10,10 @@ class PermissionService {
         return await this.roleRepository.findRoles(id);
     }
 
+    async getRoleSelect() {
+        return await this.roleRepository.find({attributes: ['id', 'displayName']});
+    }
+
     async findById(id) {
         return await this.roleRepository.findOne(id);
     }

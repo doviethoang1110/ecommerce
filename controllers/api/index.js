@@ -6,5 +6,6 @@ module.exports = {
     CurrencyController: require('./CurrencyController'),
     ReviewController: require('./ReviewController'),
     RoleController: require('./RoleController'),
-    PermissionController: require('./PermissionController')
+    PermissionController: require('./PermissionController'),
+    UserController: require('./UserController')
 }
