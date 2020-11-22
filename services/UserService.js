@@ -42,6 +42,10 @@ class UserService {
         }
     }
 
+    async findUserByEmail(email) {
+        return await this.userRepository.findOneByAttribute(email);
+    }
+
 
 
 }

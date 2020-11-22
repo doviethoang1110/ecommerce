@@ -11,7 +11,7 @@ const {initialize} = require('./services/PassportService');
 
 // Cors
 const cors = require("cors");
-const { application } = require('./config/configuration');
+const { application, secretKey } = require('./config/configuration');
 const corsOptions = {
   origin: application.origin,
   methods: application.methods,
@@ -40,7 +40,7 @@ app.set('view engine', 'ejs');
 
 //session
 app.use(session({
-  secret: application.secretKey,
+  secret: secretKey.sessionKey,
   resave: true,
   saveUninitialized: false,
   cookie: { maxAge: 1000 * 60 * 60 * 24 }

@@ -1,4 +1,8 @@
-const {CategoryService, CurrencyService} = require('../container');
+const {CategoryService, CurrencyService, CustomerService, UserService} = require('../container');
+const bcrypt = require('bcrypt');
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const { secretKey } = require('../config/configuration');
+const jwt = require('jsonwebtoken');
 
 module.exports.singleton = (function () {
     let globalCategories;
@@ -49,4 +53,39 @@ module.exports.hookModel = (attributes) => {
         attributes.title = fixName(attributes.getDataValue('title'));
         attributes.slug = generateSlug(attributes.getDataValue('title'));
     }
+}
+
+module.exports.localAuthentication = (emailRequest, passwordRequest, done) => {
+    CustomerService.findCustomerByEmail(emailRequest).then(customer => {
+        if(!customer) return done(null, false, {message: 'Tên không đúng'});
+        let {id,name,email,address,phone} = customer;
+        if(bcrypt.compareSync(passwordRequest, customer.password)) return done(null, {id,name,email,address,phone},null);
+        else return done(null, false, {message: 'Mật khẩu không đúng'});
+    }).catch(error => done(error))
+}
+
+module.exports.jwtAuthentication = (email, password, done) => {
+    UserService.findUserByEmail(email).then(user => {
+        if(!user) return done(null, false, {message: 'Email không đúng'});
+        if(bcrypt.compareSync(password, user.password)) return done(null, user, null);
+        else return done(null, false, {message: 'Mật khẩu không đúng'});
+    }).catch(error => done(error));
+}
+
+module.exports.jwtOptions = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: secretKey.jwtKey,
+    issuer: secretKey.issuer,
+    algorithm: ['HS256']
+}
+
+module.exports.jwtGenerate = async (user, secret, life) => {
+    return jwt.sign({user}, secretKey.jwtKey,{
+        expiresIn: life,
+        algorithm: "HS256"
+    })
+}
+
+module.exports.verifyToken = async (token, secretKey) => {
+    return jwt.verify(token, secretKey);
 }

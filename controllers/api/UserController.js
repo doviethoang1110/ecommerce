@@ -1,4 +1,8 @@
 const { UserService } = require('../../container');
+const passport = require('passport');
+const { jwtGenerate } = require('../../helpers');
+const { secretKey } = require('../../config/configuration');
+let tokenList = {};
 
 module.exports.index = async (req, res) => {
     let list = await UserService.getAllUsers();
@@ -36,4 +40,30 @@ module.exports.update = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
+}
+
+module.exports.login = (req, res, next) => {
+    passport.authenticate('login-jwt', (error, user, info) => {
+        if(error) res.api(500, error);
+        if(!user) res.api(401, info.message);
+        req.logIn(user, {session:false}, (err) => {
+            if(err) res.api(500, err);
+            else {
+                const roles = [];
+                if(user.roles.length)
+                    user.roles.forEach(u => {
+                        roles.push(u.name);
+                        if(u.permissions.length) u.permissions.forEach(p => roles.push(p.name));
+                    });
+                user = {...user.dataValues, roles};
+                delete user.password;
+                Promise.all([jwtGenerate(user, secretKey.jwtKey, secretKey.token_life),
+                    jwtGenerate(user, secretKey.refreshTokenKey, secretKey.refreshTokenLife)])
+                    .then(values => {
+                        tokenList[`${values[1]}`] = {token:values[0], refreshToken: values[1]};
+                        res.api(200, {token:values[0], refreshToken: values[1]});
+                    }).catch(error => console.log(error));
+            }
+        })
+    })(req, res, next);
 }
