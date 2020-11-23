@@ -8,6 +8,7 @@ const session = require('express-session');
 const cookieParser = require("cookie-parser");
 const passport = require('passport');
 const {initialize} = require('./services/PassportService');
+const { checkToken } = require('./helpers');
 
 // Cors
 const cors = require("cors");
@@ -30,7 +31,7 @@ const review = require('./routes/api/review');
 const permission = require('./routes/api/permission');
 const role = require('./routes/api/role');
 const user = require('./routes/api/user');
-
+const auth = require('./routes/api/auth');
 
 const app = express();
 
@@ -90,6 +91,9 @@ app.use('/users', usersRouter);
 
 // use cors
 app.use('/api/v1/', cors(corsOptions));
+app.use('/api/v1/auth', auth);
+
+app.use('/api/v1/', checkToken);
 
 app.use('/api/v1/categories', category);
 app.use('/api/v1/brands', brand);
@@ -114,6 +118,7 @@ app.use(function(req, res, next) {
 
 // exception handler
 app.use(function (err, req, res, next) {
+  console.log(err)
   if(err.type) res.api(err.status,err.message);
   res.api(err.status,err.body);
 });

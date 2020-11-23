@@ -1,6 +1,5 @@
 const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
 const { localAuthentication, jwtAuthentication } = require('../helpers');
 
 module.exports.initialize = () => {

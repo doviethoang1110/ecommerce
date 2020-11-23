@@ -227,6 +227,7 @@
                             <%= customer ? customer.name : 'My account' %>
                             <ul class="onhover-show-div">
                                 <% if(customer) { %>
+                                    <span class="customerId" id="<%=customer.id%>" hidden></span>
                                     <li><a href="/trang-ca-nhan">Trang cá nhân</a></li>
                                     <li id="logout"><a href="#" data-lng="es">Đăng xuất</a></li>
                                 <% }else { %>

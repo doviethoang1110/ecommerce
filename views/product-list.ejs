@@ -287,8 +287,8 @@
         });
         $(document).on('click','.addWishList',function (event) {
             event.preventDefault();
-            const id = JSON.parse('<%-JSON.stringify(customer.id)%>');
-            if(!id) window.location.href = url+"/dang-nhap";
+            const id = +$(".customerId").attr('id');
+            if(!id) alert('Bạn chưa đăng nhập');
             else{
                 $.ajax({
                     url:url+"/wishLists",

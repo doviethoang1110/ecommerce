@@ -1,6 +1,5 @@
 const {CategoryService, CurrencyService, CustomerService, UserService} = require('../container');
 const bcrypt = require('bcrypt');
-const ExtractJwt = require('passport-jwt').ExtractJwt;
 const { secretKey } = require('../config/configuration');
 const jwt = require('jsonwebtoken');
 
@@ -72,13 +71,6 @@ module.exports.jwtAuthentication = (email, password, done) => {
     }).catch(error => done(error));
 }
 
-module.exports.jwtOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: secretKey.jwtKey,
-    issuer: secretKey.issuer,
-    algorithm: ['HS256']
-}
-
 module.exports.jwtGenerate = async (user, secret, life) => {
     return jwt.sign({user}, secretKey.jwtKey,{
         expiresIn: life,
@@ -86,6 +78,29 @@ module.exports.jwtGenerate = async (user, secret, life) => {
     })
 }
 
-module.exports.verifyToken = async (token, secretKey) => {
+module.exports.checkToken = async (req ,res, next) => {
+    try {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.replace("Bearer ", "");
+        if(!token) res.api(401, {message: "Bạn chưa đăng nhập"});
+        const decoded = await verifyToken(token, secretKey.jwtKey);
+        req.roles = decoded.user.roles
+        next()
+    }catch (error) {
+        console.log(error)
+        delete error.expiredAt;
+        error.message = "Token đã hết hạn"
+        res.api(403, error);
+    }
+}
+
+module.exports.hasRolesOrPermissions = (roles = []) => {
+    return (req, res, next) => {
+        if(req.roles.some(r => roles.includes(r))) next()
+        else res.api(403, {message: "Bạn không có quyền"});
+    }
+}
+
+verifyToken = async (token, secretKey) => {
     return jwt.verify(token, secretKey);
 }
