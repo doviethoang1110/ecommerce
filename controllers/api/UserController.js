@@ -67,3 +67,7 @@ module.exports.login = (req, res, next) => {
         })
     })(req, res, next);
 }
+
+module.exports.refreshToken = (req, res, next) => {
+    console.log(req.body)
+}

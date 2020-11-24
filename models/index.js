@@ -40,6 +40,7 @@ db.wishlists = require('../models/wishlist')(sequelize, DataTypes);
 db.permissions = require('../models/permission')(sequelize, DataTypes);
 db.roles = require('../models/role')(sequelize, DataTypes);
 db.users = require('../models/user')(sequelize, DataTypes);
+db.coupons = require('../models/coupon')(sequelize, DataTypes);
 
 // relationships
 db.categories.belongsToMany(db.products,{
@@ -114,6 +115,22 @@ db.roles.belongsToMany(db.users, {
   as: 'users',
   onUpdate: 'CASCADE',
   foreignKey: 'roleId'
+});
+
+db.customers.belongsToMany(db.coupons, {
+  through: 'Coupon_Customer',
+  timestamps: false,
+  as: 'coupons',
+  onUpdate: 'CASCADE',
+  foreignKey: 'customerId'
+});
+
+db.coupons.belongsToMany(db.customers, {
+  through: 'Coupon_Customer',
+  timestamps: false,
+  as: 'customers',
+  onUpdate: 'CASCADE',
+  foreignKey: 'couponId'
 });
 
 module.exports = db;

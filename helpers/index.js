@@ -90,7 +90,7 @@ module.exports.checkToken = async (req ,res, next) => {
         console.log(error)
         delete error.expiredAt;
         error.message = "Token đã hết hạn"
-        res.api(403, error);
+        res.api(401, error);
     }
 }
 

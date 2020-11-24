@@ -10,5 +10,6 @@ module.exports = {
     WishListService: Container.get(require('../services/WishListService')),
     RoleService: Container.get(require('../services/RoleService')),
     PermissionService: Container.get(require('../services/PermissionService')),
-    UserService: Container.get(require('../services/UserService'))
+    UserService: Container.get(require('../services/UserService')),
+    CouponService: Container.get(require('../services/CouponService'))
 }

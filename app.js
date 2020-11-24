@@ -32,6 +32,7 @@ const permission = require('./routes/api/permission');
 const role = require('./routes/api/role');
 const user = require('./routes/api/user');
 const auth = require('./routes/api/auth');
+const coupon = require('./routes/api/coupon');
 
 const app = express();
 
@@ -104,6 +105,7 @@ app.use('/api/v1/reviews', review);
 app.use('/api/v1/permissions', permission);
 app.use('/api/v1/roles', role);
 app.use('/api/v1/users', user);
+app.use('/api/v1/coupons', coupon);
 
 // overrideMethods
 app.response.api = function (statusCode, body) {

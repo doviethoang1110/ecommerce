@@ -12,5 +12,6 @@ module.exports = {
     WishListRepository: require('./WishListRepository'),
     PermissionRepository: require('./PermissionRepository'),
     RoleRepository: require('./RoleRepository'),
-    UserRepository: require('./UserRepository')
+    UserRepository: require('./UserRepository'),
+    CouponRepository: require('./CouponRepository')
 }
