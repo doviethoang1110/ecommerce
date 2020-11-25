@@ -138,4 +138,16 @@ db.coupons.belongsToMany(db.customers, {
   foreignKey: 'couponId'
 });
 
+db.orders.hasMany(db.orderDetails, {as: 'orderDetails'});
+
+db.orderDetails.belongsTo(db.orders, {
+  foreignKey: 'orderId',
+  as: 'order'
+});
+
+db.orderDetails.belongsTo(db.products, {
+  foreignKey: 'productId',
+  as: 'product'
+});
+
 module.exports = db;

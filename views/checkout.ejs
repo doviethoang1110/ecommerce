@@ -269,6 +269,10 @@
 
         $("#useCoupon").click(function (event) {
             event.preventDefault();
+            if(!$("#coupon").val()) {
+                alert('Vui lòng điền mã coupon');
+                return;
+            }
             $.ajax({
                 url:`${url}/coupons/${$("#coupon").val()}/customers/${JSON.parse('<%-JSON.stringify(customer.id)%>')}`,
                 method:"GET",
@@ -338,13 +342,14 @@
                     currency: currency.code,
                     rate: currency.rate,
                     note: $("#note").val(),
-                    subtotal: $("#subtotal").val(),
+                    subTotal: $("#subtotal").val(),
                     shipping: $("#showCoupon").text() !== "" ? 0 : parseInt($("input[name='delivery']:checked").val()),
                     coupon: $("#showCoupon").text() !== "" ? $("#coupon").val() : "",
                     total: $("#totalValue").val(),
                     shippingMethod: $("input[name='delivery']:checked").attr("content"),
                     paymentMethod: $("input[name='payment-group']:checked").attr("content"),
-                    orderDetailRequests:listCart.map(c => ({
+                    orderDetails:listCart.map(c => ({
+                            productName: c.name,
                             productId:c.productId,
                             sku:c.id,
                             quantity:c.quantity,
@@ -352,35 +357,29 @@
                         })
                     )
                 }
-                console.log(data);
-                // $.ajax({
-                //     headers: {
-                //         'Accept': 'application/json',
-                //         'Content-Type': 'application/json'
-                //     },
-                //     url: `${url}/orders`,
-                //     method: "POST",
-                //     data,
-                //     dataType:"json",
-                //     beforeSend: function(){
-                //         $("#loading").removeAttr("hidden");
-                //         $("#btn-submit").prop("disabled",true);
-                //     },
-                //     complete: function(){
-                //         $("#loading").hide();
-                //         $("#btn-submit").prop("disabled",false);
-                //     },
-                //     success:function (response) {
-                //         localStorage.removeItem("listCart");
-                //         Swal.fire({
-                //             text:response.data,
-                //             icon:response.status
-                //         }).then(()=>{location.reload()})
-                //     },
-                //     error:function (error) {
-                //         console.log(error);
-                //     }
-                // })
+                $.ajax({
+                    url: `${url}/thanh-toan`,
+                    method: "POST",
+                    data,
+                    beforeSend: function(){
+                        $("#loading").removeAttr("hidden");
+                        $("#placeOrder").prop("disabled",true);
+                    },
+                    complete: function(){
+                        $("#loading").hide();
+                        $("#placeOrder").prop("disabled",false);
+                    },
+                    success:function (response) {
+                        localStorage.removeItem("listCart");
+                        Swal.fire({
+                            text:response,
+                            icon:'success'
+                        }).then(()=>{location.reload()})
+                    },
+                    error:function (error) {
+                        console.log(error);
+                    }
+                })
             }
         })
     });

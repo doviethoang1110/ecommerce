@@ -8,5 +8,6 @@ module.exports = {
     RoleController: require('./RoleController'),
     PermissionController: require('./PermissionController'),
     UserController: require('./UserController'),
-    CouponController: require('./CouponController')
+    CouponController: require('./CouponController'),
+    OrderController: require('./OrderController')
 }

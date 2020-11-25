@@ -33,6 +33,7 @@ const role = require('./routes/api/role');
 const user = require('./routes/api/user');
 const auth = require('./routes/api/auth');
 const coupon = require('./routes/api/coupon');
+const order = require('./routes/api/order');
 
 const app = express();
 
@@ -66,9 +67,9 @@ let currencies;
 app.use(async function (req,res,next) {
   if(!categories) {
     let func = await singleton;
-    let {globalCurrencies, globalCategories} = await func();
-    currencies = globalCurrencies
-    categories = globalCategories
+    let data = await func();
+    currencies = data.globalCurrencies
+    categories = data.globalCategories
   }
   res.locals = {
     categories,
@@ -106,6 +107,7 @@ app.use('/api/v1/permissions', permission);
 app.use('/api/v1/roles', role);
 app.use('/api/v1/users', user);
 app.use('/api/v1/coupons', coupon);
+app.use('/api/v1/orders', order);
 
 // overrideMethods
 app.response.api = function (statusCode, body) {
@@ -120,7 +122,6 @@ app.use(function(req, res, next) {
 
 // exception handler
 app.use(function (err, req, res, next) {
-  console.log(err)
   if(err.type) res.api(err.status,err.message);
   res.api(err.status,err.body);
 });
