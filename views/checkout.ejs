@@ -61,6 +61,7 @@
                                     <textarea id="note" style="height: 170px" placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
                                 </div>
                             </div>
+                            <span id="errorMsg" class="text-danger"></span>
                         </div>
                         <div class="col-lg-6 col-sm-12 col-xs-12">
                             <div class="checkout-details">
@@ -116,23 +117,23 @@
         </div>
     </div>
 </section>
-<!--<div class="modal fade bd-example-modal-lg" id="openCoupons" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">-->
-<!--    <div class="modal-dialog modal-lg">-->
-<!--        <div class="modal-content">-->
-<!--            <table class="table">-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                    <th scope="col">Code</th>-->
-<!--                    <th scope="col">Description</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody id="modal-coupon">-->
+<div class="modal fade bd-example-modal-lg" id="openCoupons" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Description</th>
+                </tr>
+                </thead>
+                <tbody id="modal-coupon">
 
-<!--                </tbody>-->
-<!--            </table>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <%- include('layout/footer'); %>
 <script>
     let subTotal = calTotal();
@@ -154,6 +155,7 @@
             });
             $("ul.sub-total li .count").text(formatMoney(subTotal));
             $("#subtotal").val(subTotal);
+            $("#totalValue").val(+subTotal);
             $("#account-option").click(function (event) {
                 var check = document.getElementById("account-option").checked;
                 if(check){
@@ -201,11 +203,13 @@
             $("#ship1").prop("checked",true);   
             $("#payment-1").prop("checked",true);
             $("#count").text(formatMoney(subTotal));
+
             $(document).on('change','input[name="delivery"]',function (event) {
                 let total = subTotal;
                 total = +(currency.rate !== 1 ? total/currency.rate/1000 : total/currency.rate) + +(currency.rate !== 1
                     ? $(this).val()/currency.rate/1000 : $(this).val()/currency.rate);
                 $("#count").text(new Intl.NumberFormat('en-US',{ style: 'currency', currency: currency.code }).format(Math.round(total)));
+                $("#totalValue").val(+(subTotal + +$(this).val()))
             })
         }
         $("#account-option").click(function (event) {
@@ -223,9 +227,161 @@
                 $('input[name="phone"]').val('');
             }
         });
-        $("#placeOrder").click(function (event) {
+
+        $("#listCoupon").click(function (event) {
             event.preventDefault();
-            console.log(listCart)
+            $.ajax({
+                url: `${url}/coupons/customers/${JSON.parse('<%-JSON.stringify(customer.id)%>')}`,
+                method: "GET",
+                success: function (response) {
+                    $("#modal-coupon").html("");
+                    response.forEach(r => {
+                        let a = "";
+                        let className = "";
+                        switch (r.type) {
+                            case 1:
+                                a = "Free shipping";
+                                className = "text-primary";
+                                break;
+                            case 2:
+                                a = "Flash sale " + formatMoney(Math.round(r.detail));
+                                className = "text-success";
+                                break;
+                            case 3:
+                                a = `Discount ${r.detail} %`;
+                                className = "text-warning";
+                                break;
+                        }
+                        $("#modal-coupon").append(`
+                            <tr>
+                                <th>${r.code}</th>
+                                <td class="${className}">${a}</td>
+                            </tr>
+                        `);
+                    });
+                    $("#openCoupons").modal("show");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        $("#useCoupon").click(function (event) {
+            event.preventDefault();
+            $.ajax({
+                url:`${url}/coupons/${$("#coupon").val()}/customers/${JSON.parse('<%-JSON.stringify(customer.id)%>')}`,
+                method:"GET",
+                success:function (response) {
+                    if(!response){
+                        alert("Mã giảm giá không tồn tài hoặc đã hết hạn");
+                        return;
+                    }else{
+                        $("#shipping").hide();
+                        switch (response.type) {
+                            case 1:
+                                $("#showCoupon").text("Free shipping");
+                                $("#count").text(formatMoney(subTotal));
+                                $("#totalValue").val(+(subTotal).toFixed(2));
+                                $("#append").html("");
+                                break;
+                            case 2:
+                                $("#showCoupon").text("Flash sale "+formatMoney(response.detail));
+                                $("#append").html(`
+                               <li>
+                                    Flash sale
+                                    <span class="count"> - `+formatMoney(response.detail)+`</span>
+                               </li>
+                            `);
+                                $("#count").text(formatMoney(subTotal- response.detail));
+                                $("#totalValue").val(+(subTotal- response.detail))
+                                break;
+                            case 3:
+                                $("#showCoupon").text("Discount "+response.detail+"% in total");
+                                $("#append").html(`
+                               <li>
+                                    Discount
+                                    <span class="count"> - `+response.detail+`%</span>
+                               </li>
+                            `);
+                                $("#count").text(formatMoney((subTotal-(subTotal*response.detail)/100)));
+                                $("#totalValue").val(+(subTotal-(subTotal*response.detail)/100));
+                                break;
+                        }
+                    }
+                },
+                error:function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        $("#checkout").submit(function (event) {
+            event.preventDefault();
+            if(+currency.id !== 2 && +($("input[name='payment-group']:checked").val()) === 2){
+                alert("Mệnh giá VND không phù hợp với phương thức thanh toán này");
+            }else{
+                const name = $("#name").val();
+                const email = $("#email").val();
+                const phone = $("#phone").val();
+                const address = $("#address").val();
+                if(!name || !email || !address || !phone) {
+                    $("#errorMsg").text("Vui lòng điền đầy đủ thông tin");
+                    return;
+                }
+                const data = {
+                    customerId: +$("input[name='f_id']").val(),
+                    name: $("#name").val(),
+                    email: $("#email").val(),
+                    phone: $("#phone").val(),
+                    address: $("#address").val(),
+                    currency: currency.code,
+                    rate: currency.rate,
+                    note: $("#note").val(),
+                    subtotal: $("#subtotal").val(),
+                    shipping: $("#showCoupon").text() !== "" ? 0 : parseInt($("input[name='delivery']:checked").val()),
+                    coupon: $("#showCoupon").text() !== "" ? $("#coupon").val() : "",
+                    total: $("#totalValue").val(),
+                    shippingMethod: $("input[name='delivery']:checked").attr("content"),
+                    paymentMethod: $("input[name='payment-group']:checked").attr("content"),
+                    orderDetailRequests:listCart.map(c => ({
+                            productId:c.productId,
+                            sku:c.id,
+                            quantity:c.quantity,
+                            price: +currency.rate !== 1 ? c.price/currency.rate/1000 : c.price
+                        })
+                    )
+                }
+                console.log(data);
+                // $.ajax({
+                //     headers: {
+                //         'Accept': 'application/json',
+                //         'Content-Type': 'application/json'
+                //     },
+                //     url: `${url}/orders`,
+                //     method: "POST",
+                //     data,
+                //     dataType:"json",
+                //     beforeSend: function(){
+                //         $("#loading").removeAttr("hidden");
+                //         $("#btn-submit").prop("disabled",true);
+                //     },
+                //     complete: function(){
+                //         $("#loading").hide();
+                //         $("#btn-submit").prop("disabled",false);
+                //     },
+                //     success:function (response) {
+                //         localStorage.removeItem("listCart");
+                //         Swal.fire({
+                //             text:response.data,
+                //             icon:response.status
+                //         }).then(()=>{location.reload()})
+                //     },
+                //     error:function (error) {
+                //         console.log(error);
+                //     }
+                // })
+            }
         })
     });
 </script>

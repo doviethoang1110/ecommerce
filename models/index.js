@@ -41,6 +41,11 @@ db.permissions = require('../models/permission')(sequelize, DataTypes);
 db.roles = require('../models/role')(sequelize, DataTypes);
 db.users = require('../models/user')(sequelize, DataTypes);
 db.coupons = require('../models/coupon')(sequelize, DataTypes);
+db.orderStatus = require('../models/orderstatus')(sequelize, DataTypes);
+db.paymentStatus = require('../models/paymentstatus')(sequelize, DataTypes);
+db.shippingStatus = require('../models/shippingstatus')(sequelize, DataTypes);
+db.orders = require('../models/order')(sequelize, DataTypes);
+db.orderDetails = require('../models/orderdetail')(sequelize, DataTypes);
 
 // relationships
 db.categories.belongsToMany(db.products,{

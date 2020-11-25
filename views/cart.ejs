@@ -84,7 +84,7 @@
     $(document).on("change","input[name='quantity']",function (event) {
         event.preventDefault();
         let cart = listCart.find(c => c.id === $(this).attr("content"));
-        if(+$(this).val() < 1){
+        if((+$(this).val() < 1) || isNaN(+$(this).val())){
             $("span[content='"+cart.id+"'").text("Tối thiểu 1");
             return;
         }else {

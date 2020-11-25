@@ -417,10 +417,9 @@
     }
 
     function calTotal(){
-        let total = 0;
-        listCart.forEach(cart=>{
-            total += cart.price*cart.quantity
-        });
+        let total = listCart.reduce((total,cart) => {
+            return total += cart.price * cart.quantity
+        },0);
         return Math.round(total);
     }
 

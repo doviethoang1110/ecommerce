@@ -51,7 +51,7 @@ class CouponService {
 
     async removeCoupon(id) {
         try {
-            return await this.couponRepository.findCouponsByCustomerId(id);
+            return await this.couponRepository.findCouponsByCustomerId(id, []);
         }catch (e) {
             console.log(e);
             throw {status: 400, body: e};
@@ -94,6 +94,14 @@ class CouponService {
             console.log(err)
             throw { status: 400, body: err };
         }
+    }
+
+    async getCouponsForCheckout(id) {
+        return await this.couponRepository.findCouponsByCustomerId(id, ['code','type','detail']);
+    }
+
+    async useCoupon(id, code) {
+        return await this.couponRepository.useCoupon(id, code);
     }
 
 }

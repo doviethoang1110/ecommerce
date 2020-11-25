@@ -24,6 +24,8 @@ router.get('/', HomeController.index)
     .get('/verify-email',isUnAuthenticated, HomeController.verifyEmail)
     .get('/dang-nhap',isUnAuthenticated, HomeController.login)
     .post('/dang-nhap', HomeController.postLogin)
-    .delete('/dang-xuat', HomeController.logout);
+    .delete('/dang-xuat', HomeController.logout)
+    .get('/coupons/customers/:id', HomeController.coupons)
+    .get('/coupons/:code/customers/:id', HomeController.useCoupon);
 
 module.exports = router;

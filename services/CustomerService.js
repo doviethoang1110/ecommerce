@@ -12,7 +12,7 @@ class CustomerService {
     async findCustomerByEmail(email) {
         return await this.customerRepository.findOneByAttribute({
             attributes: ['id','name','email','address','phone','password'],
-            where: {email}
+            where: {email, enabled: true}
         })
     }
 

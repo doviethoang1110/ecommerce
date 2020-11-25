@@ -13,5 +13,10 @@ module.exports = {
     PermissionRepository: require('./PermissionRepository'),
     RoleRepository: require('./RoleRepository'),
     UserRepository: require('./UserRepository'),
-    CouponRepository: require('./CouponRepository')
+    CouponRepository: require('./CouponRepository'),
+    OrderStatusRepository: require('./OrderStatusRepository'),
+    ShippingStatusRepository: require('./OrderStatusRepository'),
+    PaymentStatusRepository: require('./PaymentStatusRepository'),
+    OrderDetailRepository: require('./OrderDetailRepository'),
+    OrderRepository: require('./OrderRepository')
 }

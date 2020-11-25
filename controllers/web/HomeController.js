@@ -1,4 +1,4 @@
-const {BrandService,BlogService,ProductService,CustomerService,ReviewService,WishListService} = require('../../container');
+const {BrandService,BlogService,ProductService,CustomerService,ReviewService,WishListService,CouponService} = require('../../container');
 const passport = require('passport');
 
 module.exports.index = async function (req, res) {
@@ -172,5 +172,30 @@ module.exports.removeWishList = async (req, res, next) => {
         res.api(result.status, result.body);
     }catch (error) {
         next(error)
+    }
+}
+
+module.exports.coupons = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        const list = await CouponService.getCouponsForCheckout(id);
+        res.api(200, list.coupons);
+    }catch (error) {
+        next(error);
+    }
+}
+
+module.exports.useCoupon = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const code = req.params.code;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        if(!code) throw new Error('Thiếu mã coupon');
+        const coupon = await CouponService.useCoupon(id,code);
+        console.log(coupon)
+        res.api(200, coupon);
+    }catch (error) {
+        next(error);
     }
 }

@@ -386,6 +386,10 @@
             e.preventDefault();
             if(param.length !== length) return;
             let quantity = +$("input[name='quantity']").val();
+            if(isNaN(quantity)) {
+                $("#message").text('Số lượng phải là số');
+                return;
+            }
             if(quantity < 1) {
                 $("#message").text('Số lượng phải lớn hơn 1');
                 return;
@@ -396,6 +400,7 @@
             }
             const product = {
                 quantity,
+                productId: JSON.parse('<%- JSON.stringify(product.id)%>'),
                 name: $("#product-name").text(),
                 id: $("#code").text(),
                 image,

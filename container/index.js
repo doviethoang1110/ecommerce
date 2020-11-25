@@ -11,5 +11,7 @@ module.exports = {
     RoleService: Container.get(require('../services/RoleService')),
     PermissionService: Container.get(require('../services/PermissionService')),
     UserService: Container.get(require('../services/UserService')),
-    CouponService: Container.get(require('../services/CouponService'))
+    CouponService: Container.get(require('../services/CouponService')),
+    StatusService: Container.get(require('../services/StatusService')),
+    OrderService: Container.get(require('../services/OrderService'))
 }

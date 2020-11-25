@@ -5,14 +5,30 @@ class CouponRepository extends Repository {
         super(coupons);
     }
 
-    async findCouponsByCustomerId(id) {
+    async findCouponsByCustomerId(id, attributes = ['id','name']) {
         return await customers.findByPk(id,{
             attributes: [],
             include: [
                 {
                     model:coupons,
                     as:'coupons',
-                    attributes:['id','name'],
+                    attributes,
+                    through:{ attributes:[] }
+                }
+            ]
+        })
+    }
+
+    async useCoupon(id, code) {
+        return await coupons.findOne({
+            attributes: ['detail','type'],
+            where: {code},
+            include: [
+                {
+                    model:customers,
+                    as:'customers',
+                    attributes: [],
+                    where: {id},
                     through:{ attributes:[] }
                 }
             ]
