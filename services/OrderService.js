@@ -1,4 +1,9 @@
-const { OrderRepository, OrderDetailRepository, CustomerRepository, CouponRepository } = require('../repository');
+const { OrderRepository,
+    OrderDetailRepository,
+    CustomerRepository,
+    CouponRepository,
+    OrderStatusRepository
+} = require('../repository');
 const sequelize = require('sequelize');
 const { sendMail } = require('../services/EmailService');
 
@@ -9,6 +14,7 @@ class OrderService {
         this.orderDetailRepository = container.get(OrderDetailRepository);
         this.customerRepository = container.get(CustomerRepository);
         this.couponRepository = container.get(CouponRepository);
+        this.orderStatusRepository = container.get(OrderStatusRepository);
     }
 
     async checkout(
@@ -86,6 +92,32 @@ class OrderService {
         }catch (error) {
             console.log(error)
             throw {status: 500, body: error};
+        }
+    }
+
+    async getOrders() {
+        return await this.orderRepository.getOrders();
+    }
+
+    async getOrderDetail(id) {
+        return await this.orderRepository.getOrderDetail(id);
+    }
+
+    async update(id, data) {
+        try {
+            const { orderStatusId } = await this.orderRepository.findOne(id,{});
+            const statusId = orderStatusId;
+            if(+(data.orderStatusId) <= +statusId) throw new Error('Không thể cập nhật về trạng thái cũ hơn');
+            else {
+                if(+statusId === 3) throw new Error('Đơn hàng đã hoàn tất không thể hủy');
+                const result = await this.orderRepository.update(id, {...data,shippingStatusId: data.orderStatusId, paymentStatusId: data.orderStatusId});
+                const { orderStatusId } = result[1][0].dataValues;
+                const res = await this.orderRepository.updateResponse(id);
+                console.log(res);
+                return {status : 200, body: res};
+            }
+        }catch (error) {
+            throw {status : 400, body: error};
         }
     }
 

@@ -150,4 +150,24 @@ db.orderDetails.belongsTo(db.products, {
   as: 'product'
 });
 
+db.orders.belongsTo(db.orderStatus, {
+  foreignKey: 'orderStatusId',
+  as: 'orderStatus'
+});
+
+db.orders.belongsTo(db.paymentStatus, {
+  foreignKey: 'paymentStatusId',
+  as: 'paymentStatus'
+});
+
+db.orders.belongsTo(db.shippingStatus, {
+  foreignKey: 'shippingStatusId',
+  as: 'shippingStatus'
+})
+
+db.orders.belongsTo(db.customers, {
+  foreignKey: 'customerId',
+  as: 'customer'
+})
+
 module.exports = db;
