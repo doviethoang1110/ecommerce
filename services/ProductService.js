@@ -15,6 +15,17 @@ class ProductService {
         return await this.productRepository.getProductsForWeb();
     }
 
+    async filterProducts(query) {
+        const pageSize = 2;
+        const products = await this.productRepository.paginate({...query, pageSize, page: query.page - 1});
+        const totalItems = await this.productRepository.countProducts();
+        const listPages = [];
+        const length = Math.ceil((totalItems/pageSize));
+        for (let i = 1; i <= length; i++) listPages.push(i);
+        const res = {products, currentPage: +query.page, totalItems, listPages, pageSize, totalPages: length};
+        return res;
+    }
+
     async getProductBySlug(slug) {
         return await this.productRepository.findOneByAttribute({
             attributes: ['id','name','discount','description','image'],

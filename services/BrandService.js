@@ -13,6 +13,11 @@ class BrandService {
         let images = await this.brandRepository.find({attributes: ['image'],order: sequelize.literal('rand()'),limit: 8});
         return images;
     }
+
+    async getBrandsFilter() {
+        return await this.brandRepository.find({attributes: ['name','slug'],where: {status: true},order: sequelize.literal('rand()'),limit: 6});
+    }
+
     async store(brand) {
         try {
             let doc = await this.brandRepository.create(brand);

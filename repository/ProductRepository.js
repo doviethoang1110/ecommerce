@@ -51,10 +51,33 @@ class ProductRepository extends Repository {
             });
     }
 
-    async getProductsForWeb() {
+    async countProducts() {
+        return await products.count();
+    }
+
+    async paginate({page = 0, brand, price, sort, pageSize }) {
+        let where = "where p.status = true ";
+        let order = "";
+        if(sort) {
+            let [key, value] = sort.split("-");
+            key = key === "price" ? "s.exportPrice" : `p.${key}`;
+            order = `order by ${key} ${value}`;
+        }
+        if(brand) where += `and b.slug like "${brand}" `;
+        if(price) {
+            const [from, to] = price.split("-");
+            where += `and s.exportPrice between ${from} and ${to} `;
+        }
+        const query = `
+                select p.id,p.name,p.discount,p.priority,p.slug,p.image,min(s.exportPrice) as priceFrom, max(s.exportPrice) as priceTo 
+                from Products p inner join Skus s on s.product_id = p.id inner join Brands b on b.id = p.brand_id 
+                ${where}
+                group by ${(sort &&sort.startsWith('price')) ? "s.id" : "p.name"} 
+                ${order}
+                limit ${page * pageSize}, ${pageSize}
+            `;
         return await
-            sequelize.query("select p.id,p.name,p.discount,p.priority,p.slug,p.image,min(s.exportPrice) as `priceFrom`, max(s.exportPrice) as `priceTo`" +
-                "from Products p inner join Skus s on s.product_id = p.id where p.status = true group by p.name", { type: QueryTypes.SELECT });
+            sequelize.query(query, {type: QueryTypes.SELECT});
     }
 }
 module.exports = ProductRepository;

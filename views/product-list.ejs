@@ -37,43 +37,14 @@
                             <h3 class="collapse-block-title">brand</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="collection-brand-filter">
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="zara">
-                                        <label class="custom-control-label" for="zara">zara</label>
-                                    </div>
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="vera-moda">
-                                        <label class="custom-control-label" for="vera-moda">vera-moda</label>
-                                    </div>
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="forever-21">
-                                        <label class="custom-control-label" for="forever-21">forever-21</label>
-                                    </div>
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="roadster">
-                                        <label class="custom-control-label" for="roadster">roadster</label>
-                                    </div>
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="only">
-                                        <label class="custom-control-label" for="only">only</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- color filter start here -->
-                        <div class="collection-collapse-block open">
-                            <h3 class="collapse-block-title">colors</h3>
-                            <div class="collection-collapse-block-content">
-                                <div class="color-selector">
-                                    <ul>
-                                        <li class="color-1 active"></li>
-                                        <li class="color-2"></li>
-                                        <li class="color-3"></li>
-                                        <li class="color-4"></li>
-                                        <li class="color-5"></li>
-                                        <li class="color-6"></li>
-                                        <li class="color-7"></li>
-                                    </ul>
+                                    <% if(brands.length) { %>
+                                        <% brands.forEach(function (b) { %>
+                                            <div class="custom-control custom-checkbox collection-filter-checkbox">
+                                                <input type="checkbox" name="brand" value="<%=b.slug%>" class="custom-control-input" id="<%=b.name%>">
+                                                <label id="<%=b.slug%>" class="custom-control-label brand" for="<%=b.name%>"><%=b.name%></label>
+                                            </div>
+                                        <% }) %>
+                                    <% } %>
                                 </div>
                             </div>
                         </div>
@@ -81,28 +52,8 @@
                         <div class="collection-collapse-block border-0 open">
                             <h3 class="collapse-block-title">price</h3>
                             <div class="collection-collapse-block-content">
-                                <div class="collection-brand-filter">
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="hundred">
-                                        <label class="custom-control-label" for="hundred">$10 - $100</label>
-                                    </div>
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="twohundred">
-                                        <label class="custom-control-label" for="twohundred">$100 - $200</label>
-                                    </div>
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="threehundred">
-                                        <label class="custom-control-label" for="threehundred">$200 - $300</label>
-                                    </div>
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="fourhundred">
-                                        <label class="custom-control-label" for="fourhundred">$300 - $400</label>
-                                    </div>
-                                    <div class="custom-control custom-checkbox collection-filter-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="fourhundredabove">
-                                        <label class="custom-control-label" for="fourhundredabove">$400
-                                            above</label>
-                                    </div>
+                                <div class="collection-brand-filter" id="price-filter">
+
                                 </div>
                             </div>
                         </div>
@@ -154,38 +105,38 @@
                                                         </select>
                                                     </div>
                                                     <div class="product-page-filter">
-                                                        <select>
-                                                            <option value="High to low">Sorting items</option>
-                                                            <option value="Low to High">50 Products</option>
-                                                            <option value="Low to High">100 Products</option>
+                                                        <select id="order">
+                                                            <option value="" selected>Sorting items</option>
+                                                            <option value="priority-asc">Mới nhất</option>
+                                                            <option value="price-asc">Giá tăng dần</option>
+                                                            <option value="price-desc">Giá giảm dần</option>
+                                                            <option value="name-asc">Tên A-Z</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="product-wrapper-grid">
-                                        <div class="row" id="products">
+                                    <div id="listPro">
+                                        <div class="product-wrapper-grid">
+                                            <div class="row" id="products">
 
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="product-pagination">
-                                        <div class="theme-paggination-block">
-                                            <div class="row">
-                                                <div class="col-xl-6 col-md-6 col-sm-12">
-                                                    <nav aria-label="Page navigation">
-                                                        <ul class="pagination">
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-chevron-left" aria-hidden="true"></i></span> <span class="sr-only">Previous</span></a></li>
-                                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true"><i class="fa fa-chevron-right" aria-hidden="true"></i></span> <span class="sr-only">Next</span></a></li>
-                                                        </ul>
-                                                    </nav>
-                                                </div>
-                                                <div class="col-xl-6 col-md-6 col-sm-12">
-                                                    <div class="product-search-count-bottom">
-                                                        <h5>Showing Products 1-24 of 10 Result</h5>
+                                        <div class="product-pagination">
+                                            <div class="theme-paggination-block">
+                                                <div class="row">
+                                                    <div class="col-xl-6 col-md-6 col-sm-12">
+                                                        <nav aria-label="Page navigation">
+                                                            <ul class="pagination">
+
+                                                            </ul>
+                                                        </nav>
+                                                    </div>
+                                                    <div class="col-xl-6 col-md-6 col-sm-12">
+                                                        <div class="product-search-count-bottom">
+                                                            <h5></h5>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -202,31 +153,133 @@
 </section>
 <%- include('layout/footer'); %>
 <script>
+    const prices = [
+        {id:"price1", from:50000, to:300000},
+        {id:"price2", from:300000, to:500000},
+        {id:"price3", from:500000, to:1000000},
+        {id:"price4", from:1000000, to:1500000},
+        {id:"price5", from:1500000, to:2000000}
+    ];
     $(document).ready(function () {
-        $.ajax({
-            url: url+"/products",
-            method:"GET",
-            success:function (response) {
-                if(response.length) {
-                    $("#products").html("");
-                    response.forEach(pro => {
-                        let name = "";
-                        let value = "";
-                        switch (parseInt(pro.priority)) {
-                            case 1:
-                                name = "new";
-                                value = "grey";
-                                break;
-                            case 2:
-                                name = "hot";
-                                value = "orange";
-                                break;
-                            case 3:
-                                name = "sales";
-                                value = "red";
-                                break;
-                        }
-                        $("#products").append(`
+        $("#price-filter").html("");
+        prices.forEach(p=>{
+            $("#price-filter").append(`
+                <div class="custom-control custom-checkbox collection-filter-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="price" id="${p.id}">
+                    <label id="${p.from+'-'+p.to}" class="custom-control-label price-select" for="${p.id}">
+                        `+formatMoney(Math.round(p.from))+` ---
+                        `+formatMoney(Math.round(p.to))+`
+                    </label>
+                </div>
+            `);
+        });
+        ajax();
+
+        $(document).on('click','.brand',function () {
+            const url = new URL(window.location.href);
+            const param = url.searchParams;
+            param.get("brand") === $(this).attr("id") ? param.delete("brand") : param.set("brand",$(this).attr("id"));
+            url.search = param.toString();
+            window.history.pushState("", "", url.toString());
+            param.get("brand") === $(this).attr("id") ?
+                $("input[name='brand']").prop("checked",false) :
+                $(`input#${$(this).attr("id")}`).prop("checked",true);
+            ajax();
+        });
+
+        $(document).on('click','.price-select',function () {
+            const link = new URL(window.location.href);
+            let param = link.searchParams;
+            param.get("price") === $(this).attr("id") ? param.delete("price") : param.set("price",$(this).attr("id"));
+            link.search = param.toString();
+            window.history.pushState("", "", link.toString());
+            param.get("price") === $(this).attr("id") ?
+                $("input[name='price']").prop("checked",false) :
+                $(`input#${$(this).attr("id")}`).prop("checked",true);
+            ajax();
+        });
+
+        $("#order").change(function () {
+            if($(this).val()){
+                let url = new URL(window.location.href);
+                let param = url.searchParams;
+                param.set("sort",$(this).val());
+                url.search = param.toString();
+                window.history.pushState("","",url.toString());
+                ajax();
+            }
+        });
+
+        const param = new URL(window.location.href).searchParams;
+        const array = JSON.parse('<%-JSON.stringify(brands)%>');
+
+        array.forEach(a => {
+            if(a.slug === param.get("brand")) $(`input[value='${a.slug}']`).prop("checked",true);
+        });
+
+        prices.forEach(p => {
+            if(param.get("price")===p.from+"-"+p.to) $(`input#${p.id}`).prop("checked",true);
+        });
+
+        function ajax() {
+            let link = new URL(window.location.href);
+            const param = link.searchParams;
+            param.get("page") === null ? param.set("page",1) : param.set("page",param.get("page"));
+            link.search = param.toString();
+            window.history.pushState("","",link.toString());
+            link = window.location.href.includes("?") ?
+                url+"/filter"+window.location.href.substring(window.location.href.indexOf("?"),window.location.href.length) :
+                url+"/filter";
+            $.ajax({
+                url: link,
+                method:"GET",
+                success:function (response) {
+                    if(response.products.length) {
+                        console.log(response)
+                        $("#listPro").html(`
+                            <div class="product-wrapper-grid">
+                               <div class="row" id="products">
+
+                               </div>
+                            </div>
+                            <div class="product-pagination">
+                               <div class="theme-paggination-block">
+                                  <div class="row">
+                                     <div class="col-xl-6 col-md-6 col-sm-12">
+                                        <nav aria-label="Page navigation">
+                                           <ul class="pagination">
+
+                                           </ul>
+                                        </nav>
+                                     </div>
+                                     <div class="col-xl-6 col-md-6 col-sm-12">
+                                        <div class="product-search-count-bottom">
+                                           <h5></h5>
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                        `);
+                        $("#products").html("");
+                        response.products.forEach(pro => {
+                            let name = "";
+                            let value = "";
+                            switch (parseInt(pro.priority)) {
+                                case 1:
+                                    name = "new";
+                                    value = "grey";
+                                    break;
+                                case 2:
+                                    name = "hot";
+                                    value = "orange";
+                                    break;
+                                case 3:
+                                    name = "sales";
+                                    value = "red";
+                                    break;
+                            }
+                            $("#products").append(`
                             <div class="col-xl-3 col-md-6 col-grid-box">
                                 <div class="product-box">
                                     <div class="img-wrapper">
@@ -278,13 +331,50 @@
                                 </div>
                             </div>
                         `);
-                    })
+                        });
+                        $("ul.pagination").html("");
+                        $("ul.pagination").append(`
+                        <li class="page-item" ${+response.currentPage < 1? 'hidden' : ''}>
+                            <a id="previous" class="page-link" content="${+(response.currentPage - 1)}" aria-label="Previous">
+                                <span aria-hidden="true"><i class="fa fa-chevron-left" aria-hidden="true"></i></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                    `);
+                        response.listPages.forEach(page => {
+                            $("ul.pagination").append(`
+                           <li class="page-item ${+page === +response.currentPage ? 'active' : ''}">
+                                <a class="page-link" content="${+page}">${page}</a>
+                           </li>
+                        `);
+                        });
+                        $("ul.pagination").append(`
+                        <li class="page-item" ${+response.currentPage === +response.totalPages-1 ? 'hidden' : ''}>
+                            <a id="next" class="page-link" content="${+(response.currentPage + 1)}" aria-label="Next">
+                                <span aria-hidden="true"><i class="fa fa-chevron-right" aria-hidden="true"></i></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    `);
+                        $("div.product-search-count-bottom h5").text(`Showing ${response.pageSize} of ${response.totalItems} Result`);
+                    }else $("#listPro").html('<h2 style="margin-top: 30px" class="text-center text-info">Không có sản phẩm nào</h2>');
+                },
+                error: function (error) {
+                    console.log(error);
+                    $("#listPro").html('<h2 style="margin-top: 30px" class="text-center text-info">Không có sản phẩm nào</h2>');
                 }
-            },
-            error: function (error) {
-                console.log(error)
-            }
+            });
+        }
+
+        $(document).on('click','.page-link',function () {
+            const link = new URL(window.location.href);
+            const param = link.searchParams;
+            param.set("page",$(this).attr("content"));
+            link.search = param.toString();
+            window.history.pushState("", "", link.toString());
+            ajax();
         });
+
         $(document).on('click','.addWishList',function (event) {
             event.preventDefault();
             const id = +$(".customerId").attr('id');

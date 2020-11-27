@@ -19,7 +19,19 @@ module.exports.index = async function (req, res) {
 }
 
 module.exports.products = async function (req, res) {
-    res.render('product-list', {title: 'Sản phẩm'});
+    res.render('product-list', {
+        title: 'Sản phẩm',
+        brands: await BrandService.getBrandsFilter()
+    });
+}
+
+module.exports.filterProducts = async (req, res, next) => {
+    try {
+        res.api(200, await ProductService.filterProducts(req.query));
+    }catch (error) {
+        console.log(error)
+        next(error);
+    }
 }
 
 module.exports.blogs = async function(req, res) {
@@ -40,10 +52,6 @@ module.exports.blogDetail = async function (req, res) {
         title: blog.title,
         blog
     })
-}
-
-module.exports.getProducts = async function (req, res) {
-    res.api(200, await ProductService.getProductsForWeb());
 }
 
 module.exports.productDetail = async function (req, res) {
