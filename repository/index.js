@@ -18,5 +18,6 @@ module.exports = {
     ShippingStatusRepository: require('./OrderStatusRepository'),
     PaymentStatusRepository: require('./PaymentStatusRepository'),
     OrderDetailRepository: require('./OrderDetailRepository'),
-    OrderRepository: require('./OrderRepository')
+    OrderRepository: require('./OrderRepository'),
+    BannerRepository: require('./BannerRepository')
 }

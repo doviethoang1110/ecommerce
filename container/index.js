@@ -13,5 +13,6 @@ module.exports = {
     UserService: Container.get(require('../services/UserService')),
     CouponService: Container.get(require('../services/CouponService')),
     OrderService: Container.get(require('../services/OrderService')),
-    OrderStatusService: Container.get(require('../services/OrderStatusService'))
+    OrderStatusService: Container.get(require('../services/OrderStatusService')),
+    BannerService: Container.get(require('../services/BannerService'))
 }
