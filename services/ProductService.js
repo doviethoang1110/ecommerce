@@ -119,5 +119,9 @@ class ProductService {
         return await this.productRepository.restore(id);
     }
 
+    async searchProductByName(keyword) {
+        return await this.productRepository.getProductForIndex(` and p.name like "%${keyword}%" `);
+    }
+
 }
 module.exports = ProductService;

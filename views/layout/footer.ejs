@@ -343,8 +343,15 @@
 
 <!-- Theme js-->
 <script src="../assets/js/script.js"></script>
+<script src="../assets/js/jquery.ba-throttle-debounce.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
+    $("#result").fadeOut();
+    Array.prototype.limit = function limit(c){
+        return this.filter((x, i) => {
+            if(i <= (c - 1)) return true;
+        })
+    };
     function toast(icon,title) {
         const Toast = Swal.mixin({
             toast: true,
@@ -396,16 +403,47 @@
                     $("#error_message").text(error.responseJSON)
                 }
             })
-        })
+        });
+        $("#search").on('keyup', $.debounce(350, function (event) {
+            event.preventDefault();
+            if(event.target.value){
+                $.ajax({
+                    url: `${url + "/tim-kiem?key=" + event.target.value}`,
+                    method:"GET",
+                    success:function (response) {
+                        $("#result").html("");
+                        if(response.length>0){
+                            response.forEach(pro=>{
+                                $("#result").append(`
+                            <a href="/products/${pro.slug}" style="padding: 20px">
+                                <div class="row">
+                                    <img class="col-md-4" src="/uploads/${pro.image}"/>
+                                    <span class="col-md-8">
+                                        <span style="display:block">${pro.name}</span>
+                                        <span style="display:block">
+                                            ${formatMoney(pro.priceFrom)}-
+                                            ${formatMoney(pro.priceTo)}
+                                        </span>
+                                    </span>
+                                </div>
+                            </a>
+                        `);
+                            });
+                        }else $("#result").html("<h3>Không có sản phẩm phù hợp</h3>");
+                    },
+                    error:function (error) {
+                        console.log(error);
+                        $("#result").html("<h3>Không có sản phẩm phù hợp</h3>");
+                    }
+                })
+                $("#result").fadeIn();
+            }else{
+                $("#result").html("");
+                $("#result").fadeOut();
+                return false;
+            }
+        }));
     });
-
-    function openSearch() {
-        document.getElementById("search-overlay").style.display = "block";
-    }
-
-    function closeSearch() {
-        document.getElementById("search-overlay").style.display = "none";
-    }
 
     function formatDate(date) {
         return new Intl.DateTimeFormat('en', { year: 'numeric',month: 'short',day: '2-digit' }).format(date)

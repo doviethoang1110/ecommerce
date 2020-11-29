@@ -6,6 +6,8 @@ const {isAuthenticated,isUnAuthenticated} = require('../services/PassportService
 /* GET home page. */
 router.get('/', HomeController.index)
     .get('/san-pham', HomeController.products)
+    .get('/tim-kiem', HomeController.search)
+    .get('/customers/:id/orders', HomeController.getOrders)
     .get('/products/index', HomeController.productIndex)
     .get('/filter', HomeController.filterProducts)
     .get('/blogs/:slug', HomeController.blogDetail)

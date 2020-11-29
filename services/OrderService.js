@@ -121,5 +121,13 @@ class OrderService {
         }
     }
 
+    async getOrdersForCustomer(id) {
+        try {
+            return await this.orderRepository.findOrderForCustomer(id);
+        }catch (error) {
+            throw {status : 400, body: error};
+        }
+    }
+
 }
 module.exports = OrderService;

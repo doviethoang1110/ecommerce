@@ -93,11 +93,11 @@ class ProductRepository extends Repository {
             sequelize.query(query, {type: QueryTypes.SELECT});
     }
 
-    async getProductForIndex() {
+    async getProductForIndex(where = "") {
         return await sequelize.query(`
             select p.id,p.name,p.discount,p.priority,p.slug,p.image,min(s.exportPrice) as priceFrom, max(s.exportPrice) as priceTo 
                 from Products p inner join Skus s on s.product_id = p.id 
-                where p.status = true and p.deletedAt is null
+                where p.status = true and p.deletedAt is null ${where}
                 group by p.name
         `, {type: QueryTypes.SELECT});
     }

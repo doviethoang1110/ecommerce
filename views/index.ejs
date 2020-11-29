@@ -292,7 +292,7 @@
         }
       });
       function print(key, index, response){
-        const result = response.filter(r=> r.priority===index);
+        const result = response.filter(r=> r.priority===index).limit(8);
         result.forEach(f=>{
           let name = "";
           let value = "";

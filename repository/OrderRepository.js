@@ -77,5 +77,34 @@ class OrderRepository extends Repository {
             ]
         });
     }
+
+    async findOrderForCustomer(id) {
+        return await orders.findAll({
+            attributes: ['id','shippingMethod','paymentMethod','currency','total'],
+            where: {customerId: id},
+            include: [
+                {
+                    model: orderDetails,
+                    as:'orderDetails',
+                    attributes:['sku','price','quantity'],
+                    include: {
+                        model: products,
+                        as:'product',
+                        attributes:['name'],
+                    }
+                },
+                {
+                    model: orderStatus,
+                    as:'orderStatus',
+                    attributes:['name'],
+                },
+                {
+                    model: shippingStatus,
+                    as:'shippingStatus',
+                    attributes:['name'],
+                },
+            ]
+        })
+    }
 }
 module.exports = OrderRepository;

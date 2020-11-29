@@ -47,8 +47,8 @@
                                                 <th scope="col">product details</th>
                                                 <th scope="col">Price</th>
                                                 <th scope="col">Quantity</th>
-                                                <th scope="col">Shipping method</th>
-                                                <th scope="col">Order method</th>
+                                                <th scope="col">Shipping status</th>
+                                                <th scope="col">Order status</th>
                                                 <th scope="col">total</th>
                                             </tr>
                                             </thead>
@@ -182,6 +182,46 @@
         });
     }
     $(document).ready(function () {
+        $.ajax({
+            url: url + `/customers/${JSON.parse(JSON.stringify('<%-customer.id%>'))}/orders`,
+            method:"GET",
+            success:function (response) {
+                if(!response.length) $("#content_order").html(`<h2>Bạn chưa có đơn hàng nào</h2>`);
+                else{
+                    response.forEach(r => {
+                        $("#tbody").append(`
+                            <tr>
+                                <th scope="row">#${r.id}</th>
+                                <td id="order${r.id}"></td>
+                                <td id="price${r.id}"></td>
+                                <td id="quantity${r.id}"></td>
+                                <td>${r.shippingStatus.name}</td>
+                                <td>${r.orderStatus.name}</td>
+                                <td>${r.total} ${r.currency}</td>
+                            </tr>
+                        `);
+                        r.orderDetails.forEach(e => {
+                            $(`#price${r.id}`).append(`
+                                <span>${e.price} ${r.currency}</span><br>
+                            `);
+                        });
+                        r.orderDetails.forEach(e => {
+                            $(`#order${r.id}`).append(`
+                                <span>${e.product.name} - ${e.sku}</span><br>
+                            `);
+                        });
+                        r.orderDetails.forEach(e => {
+                            $(`#quantity${r.id}`).append(`
+                                <span>${e.quantity}</span><br>
+                            `);
+                        });
+                    });
+                }
+            },
+            error:function (error) {
+                console.log(error)
+            }
+        });
         getWishlist();
         $(document).on('click','.removeWishList',function (event) {
             event.preventDefault();

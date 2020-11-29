@@ -72,6 +72,29 @@ module.exports.productDetail = async function (req, res) {
     }
 }
 
+module.exports.search = async function(req, res, next) {
+    try {
+        if(req.query.key) {
+            const product = await ProductService.searchProductByName(req.query.key);
+            console.log(product)
+            res.api(200, product);
+        }else throw new Error('Không tồn tại key');
+    }catch (error) {
+        res.api(200, []);
+    }
+}
+
+module.exports.getOrders = async function(req, res, next) {
+    try {
+        const id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        const order = await OrderService.getOrdersForCustomer(id);
+        res.api(200, order);
+    }catch (error) {
+        next(error);
+    }
+}
+
 module.exports.carts = async function (req, res) {
     res.render('cart', {
         title: 'Giỏ hàng'
