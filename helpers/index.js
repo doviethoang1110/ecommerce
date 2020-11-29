@@ -48,7 +48,7 @@ module.exports.hookModel = (attributes) => {
     if(attributes.name) {
         attributes.name = fixName(attributes.getDataValue('name'));
         attributes.slug = generateSlug(attributes.getDataValue('name'));
-    }else {
+    }else if(attributes.title) {
         attributes.title = fixName(attributes.getDataValue('title'));
         attributes.slug = generateSlug(attributes.getDataValue('title'));
     }

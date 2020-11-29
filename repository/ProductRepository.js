@@ -26,8 +26,21 @@ class ProductRepository extends Repository {
         })
         return data;
     }
+
+    async findCategoriesOfProduct(id) {
+        return await products.findByPk(id, {
+            attributes: [],
+            include: {
+                model:categories,
+                as:'categories',
+                attributes:['id'],
+                through:{ attributes:[] }
+            },
+        });
+    }
+
     async findById(id) {
-        return products.findByPk(id,
+        return await products.findByPk(id,
             {
                 attributes: ['id','name','discount','description','status','vision','priority','image','imageList'],
                 include: [
@@ -56,7 +69,7 @@ class ProductRepository extends Repository {
     }
 
     async paginate({page = 0, brand, price, sort, pageSize }) {
-        let where = "where p.status = true ";
+        let where = "where p.status = true and p.deletedAt is null ";
         let order = "";
         if(sort) {
             let [key, value] = sort.split("-");
@@ -78,6 +91,57 @@ class ProductRepository extends Repository {
             `;
         return await
             sequelize.query(query, {type: QueryTypes.SELECT});
+    }
+
+    async getProductForIndex() {
+        return await sequelize.query(`
+            select p.id,p.name,p.discount,p.priority,p.slug,p.image,min(s.exportPrice) as priceFrom, max(s.exportPrice) as priceTo 
+                from Products p inner join Skus s on s.product_id = p.id 
+                where p.status = true and p.deletedAt is null
+                group by p.name
+        `, {type: QueryTypes.SELECT});
+    }
+
+    async findRestore({where}) {
+        return await products.findAll({
+            attributes: ['id','name','image'],
+            include: {
+                model: brands,
+                as: 'brand',
+                attributes: ['name']
+            },
+            where,
+            paranoid: false
+        });
+    }
+
+    async restore(id) {
+        try {
+            const data = await Promise.all([products.restore({where: {id}}),
+                products.findByPk(id,
+                    {
+                        paranoid: false,
+                        attributes: ['name','priority','vision','status','image','id'],
+                        include:[
+                            {
+                                model:brands,
+                                as:'brand',
+                                attributes:['name']
+                            },
+                            {
+                                model:categories,
+                                as:'categories',
+                                attributes:['name'],
+                                through:{ attributes:[] }
+                            }
+                        ]
+                    }
+                )]);
+            return data[1];
+        }catch (err) {
+            console.log(err);
+            if(err) throw err;
+        }
     }
 }
 module.exports = ProductRepository;

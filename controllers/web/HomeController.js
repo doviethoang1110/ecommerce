@@ -6,7 +6,8 @@ const {
     ReviewService,
     WishListService,
     CouponService,
-    OrderService
+    OrderService,
+    BannerService
 } = require('../../container');
 const passport = require('passport');
 
@@ -14,8 +15,13 @@ module.exports.index = async function (req, res) {
     res.render('index' ,{
         title:'Multikart',
         images: await BrandService.getBrandImages(),
-        blogs: await BlogService.getBlogsForIndex()
+        blogs: await BlogService.getBlogsForIndex(),
+        banners: await BannerService.getBannersForIndex()
     });
+}
+
+module.exports.productIndex = async function(req, res, next) {
+    res.api(200, await ProductService.getProductsForIndex());
 }
 
 module.exports.products = async function (req, res) {
@@ -55,11 +61,15 @@ module.exports.blogDetail = async function (req, res) {
 }
 
 module.exports.productDetail = async function (req, res) {
-    let product = await ProductService.getProductBySlug(req.params.slug);
-    res.render('product-detail', {
-        title: product.name,
-        product
-    })
+    try {
+        let product = await ProductService.getProductBySlug(req.params.slug);
+        res.render('product-detail', {
+            title: product.name,
+            product
+        })
+    }catch (error) {
+        res.render('error',{message: 'Có lỗi',error});
+    }
 }
 
 module.exports.carts = async function (req, res) {

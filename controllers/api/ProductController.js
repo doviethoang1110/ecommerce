@@ -42,9 +42,37 @@ module.exports.update = async function(req, res, next) {
 
 module.exports.store = async function(req, res, next) {
     try{
-        let data = await ProductService.store(req.body);
+        const data = await ProductService.store(req.body);
         res.api(data.status,data.body);
     }catch(err){
         next(err);
+    }
+}
+
+module.exports.remove = async function (req, res, next) {
+    try {
+        const id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        const doc = await ProductService.remove(id)
+        res.api(200, doc);
+    }catch (error) {
+        console.log(error);
+        next(error)
+    }
+}
+
+module.exports.getRestore = async function (req, res, next) {
+    res.api(200, await ProductService.getRestore());
+}
+
+module.exports.restore = async function (req, res, next) {
+    try {
+        let id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        let doc = await ProductService.restore(id);
+        res.api(200, doc);
+    }catch (error) {
+        console.log(error);
+        next(error)
     }
 }

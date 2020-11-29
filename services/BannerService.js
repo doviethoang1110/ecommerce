@@ -10,6 +10,10 @@ class BannerService {
         return await this.bannerRepository.find({attributes: ['id','name','status','image','type']});
     }
 
+    async getBannersForIndex() {
+        return await this.bannerRepository.find({attributes: ['id','name','content','type','links','image'],where: {status: true}});
+    }
+
     async findById(id) {
         return await this.bannerRepository.findOne(id, {attributes: ['id','name','links','content','image','type','status']});
     }

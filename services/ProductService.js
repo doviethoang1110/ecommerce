@@ -1,5 +1,8 @@
 const { ProductRepository,OptionRepository,SkuRepository } = require('../repository');
 const { skus,options } = require('../models');
+const sequelize = require('sequelize');
+
+
 class ProductService {
     constructor(container) {
         this.productRepository = container.get(ProductRepository);
@@ -13,6 +16,10 @@ class ProductService {
 
     async getProductsForWeb() {
         return await this.productRepository.getProductsForWeb();
+    }
+
+    async getProductsForIndex() {
+        return await this.productRepository.getProductForIndex();
     }
 
     async filterProducts(query) {
@@ -49,11 +56,20 @@ class ProductService {
         let product = await this.productRepository.findById(id);
         return product;
     }
+
     async update(data) {
         try {
-            let doc = await this.productRepository.update(data.id, data);
-            let product = await this.getProductById(data.id);
-            return { status: 200, body: product };
+            const product = await this.productRepository.findCategoriesOfProduct(data.id);
+            const oldArray = product.categories.map(c => c.id);
+            const newArray = data.categories.split(",").map(s => +s);
+            const removeItems = oldArray.filter(p => !newArray.includes(+p));
+            const addItems = newArray.filter(p => !oldArray.includes(p));
+            const doc = await this.productRepository.update(data.id, data);
+            const res = doc[1][0];
+            if(addItems.length) await res.addCategories(addItems);
+            if(removeItems.length) await res.removeCategories(removeItems);
+            const result = await this.getProductById(data.id);
+            return { status: 200, body: result };
         } catch (err) {
             console.log(err)
             throw { status: 400, body: err };
@@ -83,6 +99,24 @@ class ProductService {
         }catch (e) {
             throw { status : 400, body: e.message};
         }
+    }
+
+    async remove(id) {
+        try {
+            const doc = await this.productRepository.remove(id);
+            return { status: 200, body: doc};
+        }catch (e) {
+            console.log(e);
+            throw {status: 400, body: e};
+        }
+    }
+
+    async getRestore() {
+        return await this.productRepository.findRestore({where: {deletedAt: {[sequelize.Op.not]:null}}});
+    }
+
+    async restore(id) {
+        return await this.productRepository.restore(id);
     }
 
 }

@@ -21,7 +21,6 @@ const corsOptions = {
 
 // import routers
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const category = require('./routes/api/category');
 const brand = require('./routes/api/brand');
 const product = require('./routes/api/product');
@@ -90,7 +89,6 @@ app.use((req, res, next) => {
 
 // use routers
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // use cors
 app.use('/api/v1/', cors(corsOptions));
