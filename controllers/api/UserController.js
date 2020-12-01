@@ -2,7 +2,6 @@ const { UserService } = require('../../container');
 const passport = require('passport');
 const { jwtGenerate } = require('../../helpers');
 const { secretKey } = require('../../config/configuration');
-let tokenList = {};
 
 module.exports.index = async (req, res) => {
     let list = await UserService.getAllUsers();
@@ -60,8 +59,10 @@ module.exports.login = (req, res, next) => {
                 Promise.all([jwtGenerate(user, secretKey.jwtKey, secretKey.token_life),
                     jwtGenerate(user, secretKey.refreshTokenKey, secretKey.refreshTokenLife)])
                     .then(values => {
-                        tokenList[`${values[1]}`] = {token:values[0], refreshToken: values[1]};
-                        res.api(200, {token:values[0], refreshToken: values[1]});
+                        UserService.storeRefreshToken({userId:user.id,refreshToken: values[1]})
+                            .then(() => {
+                                res.api(200, {token:values[0], refreshToken: values[1]});
+                            })
                     }).catch(error => console.log(error));
             }
         })
@@ -70,4 +71,18 @@ module.exports.login = (req, res, next) => {
 
 module.exports.refreshToken = (req, res, next) => {
     console.log(req.body)
+}
+
+module.exports.updateUser = async (req, res, next) => {
+    try {
+        const param = req.params.id;
+        if (!param) res.api(400, 'Không tồn tại Id');
+        let data;
+        if (req.file) data = {...req.body,image:req.file.filename};
+        else data = req.body;
+        const detail = await UserService.updateUser(+(param), data);
+        res.api(detail.status, detail.body);
+    } catch (err) {
+        next(err);
+    }
 }

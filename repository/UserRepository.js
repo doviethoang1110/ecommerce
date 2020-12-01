@@ -1,5 +1,5 @@
 const Repository = require('./Repository'),
-    { users,roles, permissions } = require('../models');
+    { users,roles, permissions, userDetails } = require('../models');
 class UserRepository extends Repository {
     constructor() {
         super(users);
@@ -48,6 +48,11 @@ class UserRepository extends Repository {
         return await users.findOne({
             attributes: ['id', 'name', 'email', 'password'],
             include: [
+                {
+                    model: userDetails,
+                    as: 'userDetail',
+                    attributes: ['displayName','job','skill','image','education','location','notes']
+                },
                 {
                     model: roles,
                     as: 'roles',

@@ -69,5 +69,9 @@ class Repository {
             if(errors) throw errors;
         }
     }
+
+    async count(where = {}) {
+        return await this.collection.count(where);
+    }
 }
 module.exports = Repository;

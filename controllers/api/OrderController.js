@@ -34,3 +34,8 @@ module.exports.update = async (req, res, next) => {
         next(error)
     }
 }
+
+module.exports.chart = async (req, res, next) => {
+    const result = await OrderService.chart();
+    res.api(200, result);
+}

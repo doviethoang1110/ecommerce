@@ -2,7 +2,7 @@ const { OrderRepository,
     OrderDetailRepository,
     CustomerRepository,
     CouponRepository,
-    OrderStatusRepository
+    ProductRepository
 } = require('../repository');
 const sequelize = require('sequelize');
 const { sendMail } = require('../services/EmailService');
@@ -14,7 +14,7 @@ class OrderService {
         this.orderDetailRepository = container.get(OrderDetailRepository);
         this.customerRepository = container.get(CustomerRepository);
         this.couponRepository = container.get(CouponRepository);
-        this.orderStatusRepository = container.get(OrderStatusRepository);
+        this.productRepository = container.get(ProductRepository);
     }
 
     async checkout(
@@ -127,6 +127,33 @@ class OrderService {
         }catch (error) {
             throw {status : 400, body: error};
         }
+    }
+
+    async chart() {
+        const customers = await this.customerRepository.count();
+        const orders = await this.orderRepository.count({where : {orderStatusId: 1}});
+        const products = await this.productRepository.count();
+        const res = await this.orderRepository.find({
+            attributes: [
+                [sequelize.literal(`SUM(CASE rate WHEN 1 THEN total ELSE total * rate * 1000 END)`), 'totalAmount']
+            ]
+        });
+        const chart = await this.orderRepository.find({
+            attributes: [
+                [sequelize.literal(`SUM(CASE rate WHEN 1 THEN total ELSE total * rate * 1000 END)`), 'totalAmount'],
+                [sequelize.fn('COUNT', sequelize.col('id')), 'totalOrder'],
+                [sequelize.fn('date_format', sequelize.col('createdAt'),"%m"), 'month'],
+            ],
+            where: sequelize.where(sequelize.fn('YEAR', sequelize.col('createdAt')), new Date().getFullYear()),
+            group: 'month'
+        });
+        const totalAmountEachMonth = [0,0,0,0,0,0,0,0,0,0,0,0];
+        const totalOrderEachMonth = [0,0,0,0,0,0,0,0,0,0,0,0];
+        chart.forEach(r => {
+            totalAmountEachMonth[(+r.dataValues.month - 1)] = r.dataValues.totalAmount;
+            totalOrderEachMonth[(+r.dataValues.month - 1)] = r.dataValues.totalOrder;
+        });
+        return {totalOrderEachMonth, totalAmountEachMonth, totalAmount: res[0].dataValues.totalAmount, orders, customers, products};
     }
 
 }

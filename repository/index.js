@@ -19,5 +19,7 @@ module.exports = {
     PaymentStatusRepository: require('./PaymentStatusRepository'),
     OrderDetailRepository: require('./OrderDetailRepository'),
     OrderRepository: require('./OrderRepository'),
-    BannerRepository: require('./BannerRepository')
+    BannerRepository: require('./BannerRepository'),
+    UserDetailRepository: require('./UserDetailRepository'),
+    RefreshTokenRepository: require('./RefreshTokenRepository')
 }

@@ -1,20 +1,28 @@
-const { UserRepository } = require('../repository');
+const { UserRepository, UserDetailRepository, RefreshTokenRepository } = require('../repository');
 const sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 
 class UserService {
     constructor(container) {
         this.userRepository = container.get(UserRepository);
+        this.userDetailRepository = container.get(UserDetailRepository);
+        this.refreshTokenRepository = container.get(RefreshTokenRepository);
     }
 
     async getAllUsers(id = undefined) {
         return await this.userRepository.findUsers(id);
     }
+
+    async storeRefreshToken(data) {
+        const refreshToken = await this.refreshTokenRepository.findOneByAttribute({where: {userId: data.userId}})
+        await refreshToken ? this.refreshTokenRepository.update(refreshToken.id,data) : this.refreshTokenRepository.create(data);
+    }
     
     async store(user) {
         try {
             user.password = await bcrypt.hash(user.password, 10);
-            await this.userRepository.create(user);
+            const userCreated = await this.userRepository.create(user);
+            await this.userDetailRepository.create({userId: userCreated.id});
             return { status: 201, body: {icon:'success', message: 'Đăng ký thành công'} };
         } catch (err) {
             console.log(err)
@@ -46,7 +54,16 @@ class UserService {
         return await this.userRepository.findOneByAttribute(email);
     }
 
-
+    async updateUser(id, data) {
+        try {
+            const doc = await this.userDetailRepository.update(id, data);
+            const {displayName, job, notes, skill, location, education, image} = doc[1][0].dataValues;
+            return { status: 200, body: {displayName, job, notes, skill, location, education, image} };
+        }catch (error) {
+            console.log(error);
+            throw { status: 400, body: error };
+        }
+    }
 
 }
 module.exports = UserService;
