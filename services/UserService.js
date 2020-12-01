@@ -65,5 +65,9 @@ class UserService {
         }
     }
 
+    async userDetails() {
+        return await this.userRepository.findUserDetails();
+    }
+
 }
 module.exports = UserService;

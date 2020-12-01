@@ -71,5 +71,16 @@ class UserRepository extends Repository {
             where: {email}
         })
     }
+
+    async findUserDetails() {
+        return await users.findAll({
+            attributes: ['id','name','email'],
+            include: {
+                model: userDetails,
+                as: 'userDetail',
+                attributes: ['displayName','job','skill','image','location']
+            }
+        });
+    }
 }
 module.exports = UserRepository;

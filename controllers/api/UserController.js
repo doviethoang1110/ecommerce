@@ -86,3 +86,7 @@ module.exports.updateUser = async (req, res, next) => {
         next(err);
     }
 }
+
+module.exports.userDetails = async (req, res, next) => {
+    res.api(200, await UserService.userDetails());
+}
