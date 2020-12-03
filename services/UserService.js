@@ -1,4 +1,4 @@
-const { UserRepository, UserDetailRepository, RefreshTokenRepository } = require('../repository');
+const { UserRepository, UserDetailRepository, RefreshTokenRepository, UserRelationshipRepository } = require('../repository');
 const sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 
@@ -7,6 +7,7 @@ class UserService {
         this.userRepository = container.get(UserRepository);
         this.userDetailRepository = container.get(UserDetailRepository);
         this.refreshTokenRepository = container.get(RefreshTokenRepository);
+        this.userRelationshipRepository = container.get(UserRelationshipRepository);
     }
 
     async getAllUsers(id = undefined) {
@@ -65,8 +66,35 @@ class UserService {
         }
     }
 
-    async userDetails() {
-        return await this.userRepository.findUserDetails();
+    async userDetails(id) {
+        try {
+            let details = await this.userRepository.findUserDetails(id);
+            return details;
+        }catch (e) {
+            console.log(e)
+        }
+    }
+
+    async listFriends(id) {
+        const listFriend = await this.userRelationshipRepository.findListFriends(id,3, "requesterId");
+        const addFriendRequest = await this.userRelationshipRepository.findListFriends(id,1, "requesterId");
+        return {listFriend, addFriendRequest};
+    }
+
+    async friendRequestReceived(id) {
+        const friendRequestRecieved =  await this.userRelationshipRepository.findListFriends(id,1, "addresserId");
+        return friendRequestRecieved;
+    }
+
+    async addFriendRequest({requesterId, requesterName, addresserId}) {
+        try {
+            const doc = await this.userRelationshipRepository.create({status: 1, userActionId: requesterId, addresserId, requesterId});
+            const { status } = doc;
+            return {status, requesterName};
+        }catch (error) {
+            console.log(error);
+            throw error;
+        }
     }
 
 }

@@ -88,5 +88,31 @@ module.exports.updateUser = async (req, res, next) => {
 }
 
 module.exports.userDetails = async (req, res, next) => {
-    res.api(200, await UserService.userDetails());
+    try {
+        const id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        res.api(200, await UserService.userDetails(id));
+    }catch (error) {
+        next(error)
+    }
+}
+
+module.exports.listFriends = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        res.api(200, await UserService.listFriends(id));
+    }catch (error) {
+        next(error)
+    }
+}
+
+module.exports.friendRequestReceived = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        res.api(200, await UserService.friendRequestReceived(id));
+    }catch (error) {
+        next(error)
+    }
 }

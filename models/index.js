@@ -49,6 +49,8 @@ db.orderDetails = require('../models/orderdetail')(sequelize, DataTypes);
 db.banners = require('../models/banner')(sequelize, DataTypes);
 db.userDetails = require('../models/userdetail')(sequelize, DataTypes);
 db.refreshTokens = require('../models/refreshtoken')(sequelize, DataTypes);
+db.requestStatus = require('../models/requeststatus')(sequelize, DataTypes);
+db.userRelationships = require('../models/userrelationship')(sequelize, DataTypes);
 
 // relationships
 db.categories.belongsToMany(db.products,{
@@ -188,6 +190,11 @@ db.users.hasOne(db.refreshTokens);
 db.refreshTokens.belongsTo(db.users, {
   foreignKey: 'userId',
   as: 'user'
+});
+
+db.userRelationships.belongsTo(db.requestStatus, {
+  foreignKey: 'status',
+  as: 'requestStatus',
 });
 
 module.exports = db;

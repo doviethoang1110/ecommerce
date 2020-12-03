@@ -21,5 +21,6 @@ module.exports = {
     OrderRepository: require('./OrderRepository'),
     BannerRepository: require('./BannerRepository'),
     UserDetailRepository: require('./UserDetailRepository'),
-    RefreshTokenRepository: require('./RefreshTokenRepository')
+    RefreshTokenRepository: require('./RefreshTokenRepository'),
+    UserRelationshipRepository: require('./UserRelationShipRepository')
 }

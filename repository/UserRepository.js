@@ -1,5 +1,7 @@
 const Repository = require('./Repository'),
-    { users,roles, permissions, userDetails } = require('../models');
+    { users,roles, permissions, userDetails, userRelationships, Sequelize,sequelize } = require('../models');
+const { QueryTypes } = require('sequelize');
+
 class UserRepository extends Repository {
     constructor() {
         super(users);
@@ -72,15 +74,26 @@ class UserRepository extends Repository {
         })
     }
 
-    async findUserDetails() {
+    async findUserDetails(id) {
         return await users.findAll({
             attributes: ['id','name','email'],
             include: {
                 model: userDetails,
                 as: 'userDetail',
                 attributes: ['displayName','job','skill','image','location']
-            }
+            },
+            where: {id: {[Sequelize.Op.not]: +id}},
         });
     }
+// (ur.requesterId = ${id} or ur.addresserId = ${id}) and (ur.addresserId = ${id} or ur.requesterId = ${id})
+    async findUserStatus(id) {
+        return await sequelize.query(`
+            select ur.addresserId, ur.requesterId, ur.status, ur.userActionId
+            from UserRelationships ur
+            where ur.requesterId != ${id}
+        `, {type: QueryTypes.SELECT})
+    }
+
+
 }
 module.exports = UserRepository;
