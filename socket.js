@@ -16,6 +16,6 @@ module.exports.initialize = (server) => {
         socket.on("SET_USER_ID", (id) => {
             users[`${id}`] = socket;
         });
-        friendRequest(socket,io,users)
+        friendRequest(socket,users)
     });
 }

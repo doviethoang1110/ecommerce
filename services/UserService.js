@@ -75,14 +75,18 @@ class UserService {
         }
     }
 
+    async request(id, status, key) {
+        return await this.userRelationshipRepository.findListFriends(id,status,key);
+    }
+
     async listFriends(id) {
-        const listFriend = await this.userRelationshipRepository.findListFriends(id,3, "requesterId");
-        const addFriendRequest = await this.userRelationshipRepository.findListFriends(id,1, "requesterId");
+        const listFriend = await this.request(id,3, "requesterId");
+        const addFriendRequest = await this.request(id,1, "requesterId");
         return {listFriend, addFriendRequest};
     }
 
     async friendRequestReceived(id) {
-        const friendRequestRecieved =  await this.userRelationshipRepository.findListFriends(id,1, "addresserId");
+        const friendRequestRecieved =  await this.request(id,1, "addresserId");
         return friendRequestRecieved;
     }
 

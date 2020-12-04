@@ -9,9 +9,9 @@ class UserRelationShipRepository extends Repository {
 
     async findListFriends(id, status, key) {
         return await sequelize.query(`
-            select u.name, ud.displayName, ud.image, rs.name as "status"
-            from UserRelationships ur inner join Users u on u.id = ur.${key === 'requesterId' ? 'addresserId' : 'requesterId'} inner join RequestStatuses rs on 
-            rs.id = ur.status inner join UserDetails ud on ud.userId = u.id 
+            select u.id,u.email,u.name, ud.displayName, ud.image
+            from UserRelationships ur inner join Users u on u.id = ur.${key === 'requesterId' ? 'addresserId' : 'requesterId'} 
+            inner join UserDetails ud on ud.userId = u.id 
             where ur.${key} = ${+id} and ur.status = ${status}
         `, {type: QueryTypes.SELECT})
     }
