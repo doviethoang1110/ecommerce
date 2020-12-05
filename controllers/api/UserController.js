@@ -116,3 +116,14 @@ module.exports.friendRequestReceived = async (req, res, next) => {
         next(error)
     }
 }
+
+module.exports.profile = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const loginId = req.params.loginId;
+        if(isNaN(id) || isNaN(loginId)) throw new Error('không tồn tại id');
+        res.api(200, await UserService.profile(loginId,id));
+    }catch (error) {
+        next(error)
+    }
+}

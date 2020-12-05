@@ -85,6 +85,19 @@ class UserRepository extends Repository {
             where: {id: {[Sequelize.Op.not]: +id}},
         });
     }
+
+    async profile(loginId, id) {
+        return await sequelize.query(`
+            select u.id,u.email,u.name,ud.displayName,ud.skill,ud.image,ud.education,ud.location,ud.job,ud.notes,
+            (select ur.status from UserRelationships ur where (
+            ur.addresserId = ${loginId} and ur.requesterId = ${id}) 
+            or (ur.requesterId = ${loginId} and ur.addresserId = ${id})) as 'status',
+            (select ur.userActionId from UserRelationships ur where (
+            ur.addresserId = ${loginId} and ur.requesterId = ${id}) 
+            or (ur.requesterId = ${loginId} and ur.addresserId = ${id})) as 'userActionId'
+            from Users u INNER JOIN UserDetails ud on ud.userId = u.id WHERE u.id = ${id}
+        `, {type: QueryTypes.SELECT});
+    }
 // (ur.requesterId = ${id} or ur.addresserId = ${id}) and (ur.addresserId = ${id} or ur.requesterId = ${id})
     async findUserStatus(id) {
         return await sequelize.query(`

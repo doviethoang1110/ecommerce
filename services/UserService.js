@@ -69,6 +69,7 @@ class UserService {
     async userDetails(id) {
         try {
             let details = await this.userRepository.findUserDetails(id);
+            console.log(details)
             return details;
         }catch (e) {
             console.log(e)
@@ -99,6 +100,14 @@ class UserService {
             console.log(error);
             throw error;
         }
+    }
+
+    async deniedAddFriendRequest(data) {
+        return await this.userRelationshipRepository.remove(data);
+    }
+
+    async profile(loginId,id) {
+        return await this.userRepository.profile(loginId, id);
     }
 
 }

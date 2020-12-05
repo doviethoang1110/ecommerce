@@ -15,5 +15,9 @@ class UserRelationShipRepository extends Repository {
             where ur.${key} = ${+id} and ur.status = ${status}
         `, {type: QueryTypes.SELECT})
     }
+
+    async remove({requesterId, addresserId}) {
+        return await userRelationships.destroy({where: {requesterId, addresserId},individualHooks:true});
+    }
 }
 module.exports = UserRelationShipRepository;
