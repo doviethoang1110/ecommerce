@@ -5,16 +5,14 @@ module.exports.friendRequest = (socket,users) => {
         try {
             await UserService.addFriendRequest({requesterId:sender.id, addresserId: receiver.id});
             if(users[`${receiver.id}`]) socket.to(users[`${receiver.id}`].id).emit("RECEIVED_ADD_FRIEND_REQUEST", {...sender})
-            socket.emit("ADD_FRIEND_REQUEST_SUCCESS", {...receiver});
         }catch (error) {
             console.log(error);
             socket.emit("ADD_FRIEND_REQUEST_FAILURE", "Gửi yêu cầu thất bại");
         }
     });
 
-    socket.on("DENIED_ADD_FRIEND_REQUEST", async ({requesterId, addresserId}) => {
-        // await UserService.deniedAddFriendRequest({requesterId, addresserId});
-        if(users[`${+addresserId}`]) socket.to(users[`${addresserId}`].id).emit("RECEIVED_DENIED_ADD_FRIEND_REQUEST", requesterId)
-        socket.emit("DENIED_ADD_FRIEND_REQUEST_SUCCESS", addresserId);
+    socket.on("REMOVE_ADD_FRIEND_REQUEST", async ({requesterId, addresserId}) => {
+        await UserService.deniedAddFriendRequest({requesterId, addresserId});
+        if(users[`${+addresserId}`]) socket.to(users[`${addresserId}`].id).emit("REMOVE_ADD_FRIEND_REQUEST_SUCCESS", requesterId);
     });
 }

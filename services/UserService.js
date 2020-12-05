@@ -69,7 +69,6 @@ class UserService {
     async userDetails(id) {
         try {
             let details = await this.userRepository.findUserDetails(id);
-            console.log(details)
             return details;
         }catch (e) {
             console.log(e)
