@@ -16,6 +16,17 @@ class UserRelationShipRepository extends Repository {
         `, {type: QueryTypes.SELECT})
     }
 
+    async update({requesterId, addresserId, data}) {
+        try {
+            const document = await userRelationships.update(data,{where:{requesterId, addresserId},individualHooks:true});
+            return document;
+        }catch (err) {
+            console.log(err)
+            let errors = validate(err.errors);
+            if(errors) throw errors;
+        }
+    }
+
     async remove({requesterId, addresserId}) {
         return await userRelationships.destroy({where: {requesterId, addresserId},individualHooks:true});
     }

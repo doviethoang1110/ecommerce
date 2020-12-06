@@ -105,6 +105,10 @@ class UserService {
         return await this.userRelationshipRepository.remove(data);
     }
 
+    async acceptFriendRequest(data) {
+        return await this.userRelationshipRepository.update(data);
+    }
+
     async profile(loginId,id) {
         return await this.userRepository.profile(loginId, id);
     }
