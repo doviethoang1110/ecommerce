@@ -108,5 +108,9 @@ class UserService {
         return await this.userRepository.profile(loginId, id);
     }
 
+    async removeFriendShip(data) {
+        return await this.userRelationshipRepository.removeFriendShip(data);
+    }
+
 }
 module.exports = UserService;

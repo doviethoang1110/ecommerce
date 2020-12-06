@@ -5,7 +5,6 @@ module.exports = {
     await queryInterface.bulkInsert('RequestStatuses',
         [
           {name: 'Yêu cầu đã gửi'},
-          {name: 'Yêu cầu đã hủy'},
           {name: 'Bạn bè'},
           {name: 'Chặn'}
         ]

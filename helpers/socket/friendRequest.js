@@ -18,10 +18,18 @@ module.exports.friendRequest = (socket,users) => {
 
     socket.on("ACCEPT_ADD_FRIEND_REQUEST", async ({requesterId, addresserId, addresserName}) => {
         try {
-            await UserService.acceptFriendRequest({requesterId, addresserId, data: {userActionId: addresserId, status: 3}});
+            await UserService.acceptFriendRequest({requesterId, addresserId, data: {userActionId: addresserId, status: 2}});
             if(users[`${+requesterId}`]) socket.to(users[`${requesterId}`].id).emit("ACCEPT_ADD_FRIEND_REQUEST_SUCCESS", addresserName);
         }catch (error) {
             socket.emit("FAILURE", "Có lỗi xảy ra");
         }
-    })
+    });
+
+    socket.on("REMOVE_RELATIONSHIP", async (data) => {
+        try {
+            await UserService.removeFriendShip(data);
+        }catch (error) {
+            socket.emit("FAILURE", "Có lỗi xảy ra");
+        }
+    });
 }

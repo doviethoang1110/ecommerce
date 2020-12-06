@@ -1,5 +1,5 @@
 const Repository = require('./Repository'),
-    { userRelationships, sequelize} = require('../models');
+    { userRelationships, sequelize, Sequelize} = require('../models');
 const { QueryTypes } = require('sequelize');
 
 class UserRelationShipRepository extends Repository {
@@ -24,7 +24,7 @@ class UserRelationShipRepository extends Repository {
             select (CASE ur.addresserId WHEN ${+id} THEN ur.requesterId ELSE ur.addresserId END )
             from UserRelationships ur
             WHERE (ur.requesterId = ${+id} or ur.addresserId = ${+id})
-            and ur.status = 3)
+            and ur.status = 2)
         `, {type: QueryTypes.SELECT});
     }
 
@@ -41,6 +41,19 @@ class UserRelationShipRepository extends Repository {
 
     async remove({requesterId, addresserId}) {
         return await userRelationships.destroy({where: {requesterId, addresserId},individualHooks:true});
+    }
+
+    async removeFriendShip({requesterId, addresserId}) {
+        console.log(requesterId, addresserId)
+        return await userRelationships.destroy({
+            where: {
+                [Sequelize.Op.or]: [
+                    {requesterId: addresserId, addresserId:requesterId},
+                    {requesterId, addresserId}
+                ]
+            },
+            individualHooks: true
+        });
     }
 }
 module.exports = UserRelationShipRepository;
