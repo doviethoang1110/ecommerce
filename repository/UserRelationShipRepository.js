@@ -7,13 +7,25 @@ class UserRelationShipRepository extends Repository {
         super(userRelationships);
     }
 
-    async findListFriends(id, status, key) {
+    async friendRequestReceived(id) {
         return await sequelize.query(`
             select u.id,u.email,u.name, ud.displayName, ud.image
-            from UserRelationships ur inner join Users u on u.id = ur.${key === 'requesterId' ? 'addresserId' : 'requesterId'} 
+            from UserRelationships ur inner join Users u on u.id = ur.requesterId 
             inner join UserDetails ud on ud.userId = u.id 
-            where ur.${key} = ${+id} and ur.status = ${status}
+            where ur.addresserId = ${+id} and ur.status = 1
         `, {type: QueryTypes.SELECT})
+    }
+
+    async findListFriends(id) {
+        return await sequelize.query(`
+            select u.id,u.name,u.email,ud.displayName, ud.image FROM Users u 
+            inner JOIN UserDetails ud on ud.userId = u.id
+            where u.id in (
+            select (CASE ur.addresserId WHEN ${+id} THEN ur.requesterId ELSE ur.addresserId END )
+            from UserRelationships ur
+            WHERE (ur.requesterId = ${+id} or ur.addresserId = ${+id})
+            and ur.status = 3)
+        `, {type: QueryTypes.SELECT});
     }
 
     async update({requesterId, addresserId, data}) {
