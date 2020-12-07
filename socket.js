@@ -1,6 +1,6 @@
 const socket = require('socket.io');
 const { application } = require('./config/configuration');
-const { friendRequest } = require('./helpers/socket/friendRequest');
+const { friendRequest, onlineFriends, checkToken } = require('./helpers/socket');
 global.users = {};
 
 module.exports.initialize = (server) => {
@@ -11,11 +11,25 @@ module.exports.initialize = (server) => {
             allowedHeaders: application.headers,
         }
     });
-
-    io.on('connection', (socket) => {
+    io.use(async (socket, next) => {
+        try {
+            const id = await checkToken(socket);
+            if(id) users[`${id}`] = socket;
+            next();
+        }catch (error) {
+            next(error);
+        }
+    }).on('connection', (socket) => {
+        let key;
         socket.on("SET_USER_ID", (id) => {
-            users[`${id}`] = socket;
+            if(id) users[`${id}`] = socket;
+            key = Object.keys(users).find(u => users[u].id === socket.id);
         });
-        friendRequest(socket,users)
+        friendRequest(socket,users);
+        onlineFriends(socket, users);
+        socket.on('disconnect', function(){
+            console.log('user ' + key + ' disconnected');
+            delete users[key];
+        });
     });
 }
