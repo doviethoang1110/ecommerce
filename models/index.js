@@ -51,6 +51,9 @@ db.userDetails = require('../models/userdetail')(sequelize, DataTypes);
 db.refreshTokens = require('../models/refreshtoken')(sequelize, DataTypes);
 db.requestStatus = require('../models/requeststatus')(sequelize, DataTypes);
 db.userRelationships = require('../models/userrelationship')(sequelize, DataTypes);
+db.conversations = require('../models/conversation')(sequelize, DataTypes);
+db.participants = require('../models/participants')(sequelize, DataTypes);
+db.messages = require('../models/message')(sequelize, DataTypes);
 
 // relationships
 db.categories.belongsToMany(db.products,{
@@ -195,6 +198,25 @@ db.refreshTokens.belongsTo(db.users, {
 db.userRelationships.belongsTo(db.requestStatus, {
   foreignKey: 'status',
   as: 'requestStatus',
+});
+
+db.users.hasMany(db.conversations, {
+  foreignKey: 'creatorId',
+  as: 'chats'
+})
+
+db.users.belongsToMany(db.conversations, {
+  through: db.participants,
+  timestamps:true,
+  as: 'conversations',
+  foreignKey: 'userId'
+});
+
+db.conversations.belongsToMany(db.users, {
+  through: db.participants,
+  timestamps: true,
+  as: 'users',
+  foreignKey: 'conversationId'
 });
 
 module.exports = db;

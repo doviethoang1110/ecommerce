@@ -127,3 +127,13 @@ module.exports.profile = async (req, res, next) => {
         next(error)
     }
 }
+
+module.exports.conversations = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        if(isNaN(id)) throw new Error('không tồn tại id');
+        res.api(200, await UserService.getAllConversations(id));
+    }catch (error) {
+        next(error);
+    }
+}

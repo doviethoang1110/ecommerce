@@ -10,5 +10,6 @@ module.exports = {
     UserController: require('./UserController'),
     CouponController: require('./CouponController'),
     OrderController: require('./OrderController'),
-    BannerController: require('./BannerController')
+    BannerController: require('./BannerController'),
+    ConversationController: require('./ConversationController')
 }

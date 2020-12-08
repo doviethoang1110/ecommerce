@@ -22,5 +22,8 @@ module.exports = {
     BannerRepository: require('./BannerRepository'),
     UserDetailRepository: require('./UserDetailRepository'),
     RefreshTokenRepository: require('./RefreshTokenRepository'),
-    UserRelationshipRepository: require('./UserRelationShipRepository')
+    UserRelationshipRepository: require('./UserRelationShipRepository'),
+    ParticipantRepository: require('./ParticipantRepository'),
+    ConversationRepository: require('./ConversationRepository'),
+    MessageRepository: require('./MessageRepository')
 }
