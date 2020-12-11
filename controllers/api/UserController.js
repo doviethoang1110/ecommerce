@@ -1,4 +1,4 @@
-const { UserService } = require('../../container');
+const { UserService, ConversationService } = require('../../container');
 const passport = require('passport');
 const { jwtGenerate } = require('../../helpers');
 const { secretKey } = require('../../config/configuration');
@@ -132,8 +132,19 @@ module.exports.conversations = async (req, res, next) => {
     try {
         const id = req.params.id;
         if(isNaN(id)) throw new Error('không tồn tại id');
-        res.api(200, await UserService.getAllConversations(id));
+        res.api(200, await ConversationService.getAllConversationsOfUser(id));
     }catch (error) {
         next(error);
+    }
+}
+
+module.exports.findConversation = async (req, res, next) => {
+    try {
+        const creatorId = req.params.creatorId;
+        const userId = req.params.userId;
+        if(isNaN(creatorId) || isNaN(userId)) throw new Error('không tồn tại id');
+        res.api(200, await ConversationService.findConversation(creatorId, userId));
+    }catch (error) {
+        next(error)
     }
 }

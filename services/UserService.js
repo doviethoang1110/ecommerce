@@ -112,9 +112,5 @@ class UserService {
         return await this.userRelationshipRepository.removeFriendShip(data);
     }
 
-    async getAllConversations(id) {
-        return await this.userRepository.findConversations(id);
-    }
-
 }
 module.exports = UserService;

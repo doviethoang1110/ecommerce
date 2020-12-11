@@ -1,5 +1,5 @@
 const Repository = require('./Repository'),
-    { users,roles, permissions, userDetails, conversations, Sequelize,sequelize } = require('../models');
+    { users,roles, permissions, userDetails, conversations, Sequelize, messages, sequelize } = require('../models');
 const { QueryTypes } = require('sequelize');
 
 class UserRepository extends Repository {
@@ -105,17 +105,6 @@ class UserRepository extends Repository {
             from UserRelationships ur
             where ur.requesterId != ${id}
         `, {type: QueryTypes.SELECT})
-    }
-
-    async findConversations(id) {
-        return await users.findByPk(id, {
-            attributes: [],
-            include: {
-                model: conversations,
-                as: 'conversations',
-                attributes: ['id','name','image','updatedAt']
-            }
-        })
     }
 
 }

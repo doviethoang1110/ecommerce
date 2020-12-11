@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      conservationId: {
+      conversationId: {
         type: Sequelize.INTEGER,
         allowNull: false
       },

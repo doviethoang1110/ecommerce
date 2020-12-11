@@ -34,6 +34,7 @@ const auth = require('./routes/api/auth');
 const coupon = require('./routes/api/coupon');
 const order = require('./routes/api/order');
 const banner = require('./routes/api/banner');
+const conversation = require('./routes/api/conversation');
 
 const app = express();
 
@@ -108,6 +109,7 @@ app.use('/api/v1/users', user);
 app.use('/api/v1/coupons', coupon);
 app.use('/api/v1/orders', order);
 app.use('/api/v1/banners', banner);
+app.use('/api/v1/conversations', conversation);
 
 // overrideMethods
 app.response.api = function (statusCode, body) {

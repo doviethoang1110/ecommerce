@@ -5,7 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Message extends Model {};
   Message.init({
-    conservationId: {
+    conversationId: {
       type: DataTypes.INTEGER,
       validate:{
         notEmpty:{

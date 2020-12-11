@@ -7,17 +7,10 @@ module.exports = (sequelize, DataTypes) => {
   Conversation.init({
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty:{
-          args: true,
-          msg: 'Tên không được trống'
-        }
-      }
+      defaultValue: '',
     },
     creatorId: {
       type: DataTypes.STRING,
-      allowNull: false,
       validate: {
         notEmpty:{
           args: true,
@@ -35,13 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     lastMessageId: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty:{
-          args: true,
-          msg: 'Tin nhắn cuối không được trống'
-        }
-      }
+      allowNull: true,
+      defaultValue: null
     }
   }, {
     sequelize,

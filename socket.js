@@ -1,6 +1,6 @@
 const socket = require('socket.io');
 const { application } = require('./config/configuration');
-const { friendRequest, onlineFriends, checkToken } = require('./helpers/socket');
+const { friendRequest, onlineFriends, checkToken, messages } = require('./helpers/socket');
 global.users = {};
 
 module.exports.initialize = (server) => {
@@ -27,6 +27,7 @@ module.exports.initialize = (server) => {
         });
         friendRequest(socket,users);
         onlineFriends(socket, users);
+        messages(socket, io, users);
         socket.on('disconnect', function(){
             console.log('user ' + key + ' disconnected');
             delete users[key];

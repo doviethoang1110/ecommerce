@@ -6,6 +6,7 @@ const router = require('express').Router(),
 router.get('/', hasRolesOrPermissions(['ADMIN_MANAGER','READ_USER']), UserController.index)
     .get('/:id/listFriends', UserController.listFriends)
     .get('/:loginId/profile/:id', UserController.profile)
+    .get('/:creatorId/newChat/:userId', UserController.findConversation)
     .get('/:id/conversations', UserController.conversations)
     .get('/:id/contacts', UserController.userDetails)
     .get('/:id/friendRequestReceived', UserController.friendRequestReceived)

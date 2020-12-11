@@ -28,6 +28,5 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
     modelName: 'Participants',
   });
-  delete Participants.rawAttributes.id;
   return Participants;
 };

@@ -219,4 +219,29 @@ db.conversations.belongsToMany(db.users, {
   foreignKey: 'conversationId'
 });
 
+db.users.hasMany(db.conversations, {
+  foreignKey: 'creatorId',
+  as: 'hasConversations'
+})
+
+db.conversations.hasMany(db.messages, {
+  as: 'messages',
+  foreignKey: 'conversationId'
+});
+
+db.messages.belongsTo(db.conversations, {
+  as: 'conversation',
+  foreignKey: 'conversationId'
+});
+
+db.conversations.belongsTo(db.messages, {
+  as: 'lastMessage',
+  foreignKey: 'lastMessageId'
+});
+
+db.messages.belongsTo(db.users, {
+  as: 'user',
+  foreignKey: 'userId'
+})
+
 module.exports = db;
