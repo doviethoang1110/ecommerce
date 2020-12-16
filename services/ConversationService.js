@@ -17,7 +17,8 @@ class ConversationService {
 
     async findConversationById(id, type) {
         try {
-            return await this.messageRepository.findMessagesOfConversation(id, type);
+            return await this.conversationRepository.findById(id, type);
+            // return await this.messageRepository.findMessagesOfConversation(id, type);
         }catch (error) {
             console.log(error);
             throw error;
@@ -43,7 +44,6 @@ class ConversationService {
 
     async createNewConversation({creatorId, participants, message, userId, conversationId}) {
         let messages;
-            console.log(conversationId)
         if(!conversationId) {
             const conversation = await this.conversationRepository.create({creatorId});
             messages = await this.messageRepository.create({userId, message, conversationId: conversation.id});
@@ -52,7 +52,7 @@ class ConversationService {
                 this.conversationRepository.update(conversation.id, {lastMessageId: messages.id})
             ]);
         }else {
-            messages = await this.messageRepository.create({userId, message, conversationId: id});
+            messages = await this.messageRepository.create({userId, message, conversationId});
             const doc = await this.conversationRepository.update(conversationId, {lastMessageId: messages.id});
         }
         let {id,message:content,type,userId:senderId,createdAt,conversation} = await this.messageRepository.findOne(messages.id);

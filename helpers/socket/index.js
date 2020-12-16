@@ -1,11 +1,11 @@
 const {checkToken} = require('./checkToken');
 const {friendRequest} = require('./friendRequest');
 const {onlineFriends} = require('./onlineFriends');
-const {messages} = require('./messages');
+const {conversations} = require('./conversation');
 
 module.exports = {
     checkToken,
     friendRequest,
     onlineFriends,
-    messages
+    conversations
 }

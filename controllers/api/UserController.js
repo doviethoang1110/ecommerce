@@ -128,16 +128,6 @@ module.exports.profile = async (req, res, next) => {
     }
 }
 
-module.exports.conversations = async (req, res, next) => {
-    try {
-        const id = req.params.id;
-        if(isNaN(id)) throw new Error('không tồn tại id');
-        res.api(200, await ConversationService.getAllConversationsOfUser(id));
-    }catch (error) {
-        next(error);
-    }
-}
-
 module.exports.findConversation = async (req, res, next) => {
     try {
         const creatorId = req.params.creatorId;

@@ -40,5 +40,53 @@ class ConversationRepository extends Repository {
         `, {type: QueryTypes.SELECT});
     }
 
+    async findById(id, type) {
+        if(type === 'single') {
+            return await conversations.findByPk(id, {
+                attributes: [],
+                include: [
+                    {
+                        model: messages,
+                        attributes: ['type','message','userId','createdAt'],
+                        as: 'messages'
+                    },
+                    {
+                        model: users,
+                        as: 'users',
+                        attributes: ['id'],
+                        through: {attributes: []}
+                    }
+                ]
+            })
+        }else {
+            return await conversations.findByPk(id, {
+                attributes: [],
+                include: [
+                    {
+                        model: messages,
+                        attributes: ['type','message','userId','createdAt'],
+                        as: 'messages',
+                        include: {
+                            model: users,
+                            as: 'user',
+                            attributes: ['id','name'],
+                            include: {
+                                model: userDetails,
+                                as: 'userDetail',
+                                attributes: ['displayName','image']
+                            }
+                        },
+                    },
+                    {
+                        model: users,
+                        as: 'users',
+                        attributes: ['id'],
+                        through: {attributes: []}
+                    }
+                ]
+            })
+        }
+    }
+
 }
 module.exports = ConversationRepository;
