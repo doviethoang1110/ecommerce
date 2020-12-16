@@ -42,6 +42,18 @@ class ConversationService {
         }
     }
 
+    async createGroupConversation({name, type, creatorId, participants}) {
+        try {
+            const conversation = await this.conversationRepository.create({name, creatorId, type});
+            conversation.addUsers(participants);
+            const {id, name:conversationName, image:conversationImage, updatedAt} = conversation;
+            return {id, conversationName, conversationImage, updatedAt}
+        }catch (error) {
+            console.log(error)
+            throw error;
+        }
+    }
+
     async createNewConversation({creatorId, participants, message, userId, conversationId}) {
         let messages;
         if(!conversationId) {
