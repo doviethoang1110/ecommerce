@@ -27,15 +27,15 @@ class ConversationRepository extends Repository {
             ud2.displayName as 'senderDisplayName',c.updatedAt
             from Participants p 
             inner JOIN Conversations c on c.id = p.conversationId
-            INNER JOIN (select p.conversationId,p.userId
+            INNER JOIN (select p.conversationId,max(p.userId) as 'userId'
             from Participants p where p.conversationId in (select p.conversationId 
             from Participants p 
-            where p.userId  = ${id}) and p.userId != ${id}) as \`temp\` on temp.conversationId = c.id
+            where p.userId  = ${id}) and p.userId != ${id} group by p.conversationId) as \`temp\` on temp.conversationId = c.id
             INNER JOIN Users u1 on u1.id = temp.userId
             INNER JOIN UserDetails ud1 on ud1.userId = u1.id
-            inner JOIN Messages m on m.id = c.lastMessageId
-            inner JOIN Users u2 on u2.id = m.userId
-            inner JOIN UserDetails ud2 on ud2.userId = u2.id
+            LEFT JOIN Messages m on m.id = c.lastMessageId
+            LEFT JOIN Users u2 on u2.id = m.userId
+            LEFT JOIN UserDetails ud2 on ud2.userId = u2.id
             where p.userId = ${id}
         `, {type: QueryTypes.SELECT});
     }

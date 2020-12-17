@@ -29,6 +29,8 @@ module.exports.conversations = (socket, io, users) => {
         });
         socket.broadcast.to(`room-${data.conversationId}`).emit("TYPING_MESSAGE", {
             conversationId: data.conversationId,
+            name: data.name,
+            image: data.image,
             type: data.type
         });
     });
@@ -39,9 +41,6 @@ module.exports.conversations = (socket, io, users) => {
                 if(!users[`${p}`].rooms.has(`room-${data.conversationId}`)) users[`${p}`].join(`room-${data.conversationId}`)
             }
         });
-        socket.broadcast.to(`room-${data.conversationId}`).emit("CLEAR_TYPING", {
-            conversationId: data.conversationId,
-            type: data.type
-        });
+        socket.broadcast.to(`room-${data.conversationId}`).emit("CLEAR_TYPING", {name: data.name});
     })
 }
