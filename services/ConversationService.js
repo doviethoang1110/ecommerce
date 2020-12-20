@@ -15,10 +15,18 @@ class ConversationService {
         }
     }
 
-    async findConversationById(id, type) {
+    async findConversationById(id, type, page) {
         try {
-            return await this.conversationRepository.findById(id, type);
-            // return await this.messageRepository.findMessagesOfConversation(id, type);
+            return await this.conversationRepository.findById(id, type, page);
+        }catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async loadMoreMessages(id, type, page) {
+        try {
+            return await this.conversationRepository.loadMore(id, type, page);
         }catch (error) {
             console.log(error);
             throw error;
@@ -54,8 +62,9 @@ class ConversationService {
         }
     }
 
-    async createNewConversation({creatorId, participants, message, userId, conversationId}) {
+    async createNewConversation({creatorId, participants, message, userId, conversationId, type:conversationType, name, image}) {
         let messages;
+        let doc;
         if(!conversationId) {
             const conversation = await this.conversationRepository.create({creatorId});
             messages = await this.messageRepository.create({userId, message, conversationId: conversation.id});
@@ -65,11 +74,13 @@ class ConversationService {
             ]);
         }else {
             messages = await this.messageRepository.create({userId, message, conversationId});
-            const doc = await this.conversationRepository.update(conversationId, {lastMessageId: messages.id});
+            doc = await this.conversationRepository.update(conversationId, {lastMessageId: messages.id});
         }
-        let {id,message:content,type,userId:senderId,createdAt,conversation} = await this.messageRepository.findOne(messages.id);
-        const {id: conId, type: conversationType, updatedAt} = conversation;
-        return {id, content,type,senderId,createdAt, conId, conversationType, updatedAt};
+        const {id, type, createdAt} = messages;
+        const {updatedAt} = doc[1][0].dataValues;
+        return conversationType === 'group'
+            ? {id, message, type, name, image, userId, createdAt, conversationId, conversationType, updatedAt}
+        : {id, message, type, userId, createdAt, conversationId, conversationType, updatedAt};
     }
 
 }

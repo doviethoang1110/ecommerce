@@ -40,52 +40,61 @@ class ConversationRepository extends Repository {
         `, {type: QueryTypes.SELECT});
     }
 
-    async findById(id, type) {
-        if(type === 'single') {
-            return await conversations.findByPk(id, {
-                attributes: [],
-                include: [
-                    {
-                        model: messages,
-                        attributes: ['type','message','userId','createdAt'],
-                        as: 'messages'
-                    },
-                    {
-                        model: users,
-                        as: 'users',
-                        attributes: ['id'],
-                        through: {attributes: []}
-                    }
-                ]
-            })
-        }else {
-            return await conversations.findByPk(id, {
-                attributes: [],
-                include: [
-                    {
-                        model: messages,
-                        attributes: ['type','message','userId','createdAt'],
-                        as: 'messages',
-                        include: {
-                            model: users,
-                            as: 'user',
-                            attributes: ['id','name'],
-                            include: {
-                                model: userDetails,
-                                as: 'userDetail',
-                                attributes: ['displayName','image']
-                            }
-                        },
-                    },
-                    {
-                        model: users,
-                        as: 'users',
-                        attributes: ['id'],
-                        through: {attributes: []}
-                    }
-                ]
-            })
+    async findById(id, type, page) {
+        let select = '';
+        let join = '';
+        const conversation = {
+            participants: [],
+            messages: [],
+            totalPages: null
         }
+        if(type === 'group') {
+            select = ',u.name,ud.displayName,ud.image';
+            join = 'INNER JOIN Users u on u.id = m.userId INNER JOIN UserDetails ud on ud.userId = u.id'
+        }
+        const [totalPages, participants, messages] = await Promise.all([
+            sequelize.query(`
+            select ROUND(count(m.id)/6) AS 'totalPages' FROM Messages m where m.conversationId = ${id}
+            `, {type: QueryTypes.SELECT}),
+            conversations.findByPk(id, {
+                attributes: [],
+                include: [
+                    {
+                        model: users,
+                        as: 'users',
+                        attributes: ['id'],
+                        through: {attributes: []}
+                    }
+                ]
+            }),
+            sequelize.query(`
+            select m.type,m.userId,m.createdAt,m.message${select}
+            from Messages m
+            ${join}
+            where m.conversationId = ${id}
+            order by m.id desc limit ${page*6},6
+        `, {type: QueryTypes.SELECT})
+        ]);
+        conversation.totalPages = totalPages[0].totalPages;
+        conversation.messages = messages;
+        conversation.participants = participants;
+        return conversation;
+    }
+
+    async loadMore(id, type, page) {
+        let select = '';
+        let join = '';
+        if(type === 'group') {
+            select = ',u.name,ud.displayName,ud.image';
+            join = 'INNER JOIN Users u on u.id = m.userId INNER JOIN UserDetails ud on ud.userId = u.id'
+        }
+        return await sequelize.query(`
+            select m.type,m.userId,m.createdAt,m.message${select}
+            from Messages m
+            ${join}
+            where m.conversationId = ${id}
+            order by m.id desc limit ${page*6},6
+        `, {type: QueryTypes.SELECT})
     }
 
 }

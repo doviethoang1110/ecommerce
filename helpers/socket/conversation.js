@@ -4,10 +4,16 @@ module.exports.conversations = (socket, io, users) => {
     socket.on("GET_CONVERSATIONS", async (id) => {
         const result = await ConversationService.getAllConversationsOfUser(id);
         socket.emit("RECEIVED_CONVERSATIONS", result);
-    })
-    socket.on("GET_MESSAGES", async ({id, type}) => {
-        const result = await ConversationService.findConversationById(id, type);
+    });
+
+    socket.on("GET_MESSAGES", async ({id, type, page}) => {
+        const result = await ConversationService.findConversationById(id, type, page);
         socket.emit("RECEIVED_MESSAGES", result);
+    });
+
+    socket.on("LOADMORE_MESSAGES", async ({id, type, page}) => {
+        const result = await ConversationService.loadMoreMessages(id, type, page);
+        socket.emit("RECEIVED_LOADMORE_MESSAGES", result);
     });
 
     socket.on("SAVE_MESSAGE", async (data) => {
@@ -16,9 +22,8 @@ module.exports.conversations = (socket, io, users) => {
                 if(!users[`${p}`].rooms.has(`room-${data.conversationId}`)) users[`${p}`].join(`room-${data.conversationId}`)
             }
         });
-        await ConversationService.createNewConversation(data);
-        io.to(`room-${data.conversationId}`).emit("RECEIVED_MESSAGE", {type: 'text',
-            message: data.message, userId: data.userId, createdAt: new Date()});
+        const result = await ConversationService.createNewConversation(data);
+        io.to(`room-${data.conversationId}`).emit("RECEIVED_MESSAGE", result);
     });
 
     socket.on("TYPING", async (data) => {
