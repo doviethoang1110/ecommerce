@@ -69,8 +69,9 @@ module.exports.login = (req, res, next) => {
     })(req, res, next);
 }
 
-module.exports.refreshToken = (req, res, next) => {
-    console.log(req.body)
+module.exports.refreshToken = async (req, res, next) => {
+    const result = await UserService.checkRefreshToken(req.body);
+    res.api(result.status, result.body);
 }
 
 module.exports.updateUser = async (req, res, next) => {

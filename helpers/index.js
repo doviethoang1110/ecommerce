@@ -72,7 +72,7 @@ module.exports.jwtAuthentication = (email, password, done) => {
 }
 
 module.exports.jwtGenerate = async (user, secret, life) => {
-    return jwt.sign({user}, secretKey.jwtKey,{
+    return jwt.sign({user}, secret,{
         expiresIn: life,
         algorithm: "HS256"
     })

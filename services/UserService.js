@@ -1,6 +1,9 @@
 const { UserRepository, UserDetailRepository, RefreshTokenRepository, UserRelationshipRepository } = require('../repository');
 const sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
+const {verify,sign} = require('jsonwebtoken');
+const { secretKey } = require('../config/configuration');
+
 
 class UserService {
     constructor(container) {
@@ -110,6 +113,20 @@ class UserService {
 
     async removeFriendShip(data) {
         return await this.userRelationshipRepository.removeFriendShip(data);
+    }
+
+    async checkRefreshToken({refreshToken}) {
+        try {
+            const { user } = verify(refreshToken, secretKey.refreshTokenKey);
+            const token = await sign({user}, secretKey.jwtKey,{
+                expiresIn: secretKey.token_life,
+                algorithm: "HS256"
+            })
+            return {status: 200, body: token};
+        }catch (error) {
+            console.log(error)
+            return {status: 401, body: 'Token đã hết hạn'}
+        }
     }
 
 }

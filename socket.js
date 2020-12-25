@@ -17,7 +17,7 @@ module.exports.initialize = (server) => {
             if(id) users[`${id}`] = socket;
             next();
         }catch (error) {
-            next(error);
+            next(error)
         }
     }).on('connection', (socket) => {
         let key;
